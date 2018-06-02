@@ -1,6 +1,7 @@
 class Sphere //<>// //<>// //<>//
 {
   int size;
+  boolean buffer = false;
 
   Sphere() {
     size = 30;
@@ -14,19 +15,15 @@ class Sphere //<>// //<>// //<>//
 
     fill(255, 0, 0);
     pointLight(255, 0, 0, width/2, height/2, 400);
+
     translate(x, y, z);
+       sphere(size);
     
-    sphere(size);
-    fill(0, 255, 255);
-    translate(x, y, z);
-    if (checkCollision(x, y)) {  
-        Pulse pulse = new Pulse(50,50);
-        pulse.display();
-    }
+ 
   }
 
   boolean checkCollision(int x, int y) {
-    println("test collision -- x = "+x+"  y = "+y+" --- W = "+displayWidth+"  H = "+displayHeight);
+  //  println("test collision -- x = "+x+"  y = "+y+" --- W = "+displayWidth+"  H = "+displayHeight);
     if (x > (displayWidth-size*2) || x < size*2) {
       println("COLISION X");
       return true;
@@ -37,7 +34,4 @@ class Sphere //<>// //<>// //<>//
     } else
       return false;
   }
-
-
-
 }

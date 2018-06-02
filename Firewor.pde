@@ -79,7 +79,7 @@ class Firewor //Particle
   void explose()
   {
     explosee = true;
-    int Nfragments = (int) random(20, 30) - 5*niveau;
+    int Nfragments = (int) random(10, 20) - 10*niveau;
 
     float beta = atan2(vit.y, vit.x);
     float norme = sqrt(sq(vit.x)+sq(vit.y));

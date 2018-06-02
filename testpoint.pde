@@ -25,11 +25,20 @@ int zoom=25;
 
 Sphere sphere;
 
+float theta2 = 0.0;
+float theta3 = 0.0;
+float theta[]={0.0, 0.0, 0.0};
+float m;
+float my;
+Vague [] v=new Vague[2];
+
+int lastxtmp = defaultValueX;
+    int lastytmp = defaultValueY;
 
 void setup() {
   myport  = new Serial(this, "/dev/ttyACM0", 9600);
   size(displayWidth, displayHeight, P3D);
-  defaultValueX = displayWidth-50;
+  defaultValueX = displayWidth/2;
   defaultValueY = displayHeight/2;
   x = defaultValueX;
   y=defaultValueY; 
@@ -46,7 +55,7 @@ void setup() {
 }
 
 void draw() {
-  background(0, 0, 0, 0);
+  background(0);
   String buffer = myport.readStringUntil('\n');
   println(buffer);
   if (buffer != null)
@@ -56,7 +65,11 @@ void draw() {
     println("X  =  "+round(val[1]));
     println("h = "+displayHeight+" Y  =  "+val[2]+"  -- "+int(round(val[2]*10))+ " -- "+y+"  --  "+ (y-(round(val[2]*10))));
     //println("Z  =  "+round(val[3]));
-
+    
+    if ( x <= (displayWidth-SPHERE_SIZE*2) && x >SPHERE_SIZE*2 && y <(displayHeight-SPHERE_SIZE*2) && y>SPHERE_SIZE*2) {
+      lastxtmp = x;
+      lastytmp = y;
+    }
     int  xtmp=x+(int((round(val[1]*10))));
     int ytmp = (y-(int(round(val[2]*15))));
     if (x!= xtmp && xtmp >= 25 && xtmp < displayWidth  )
@@ -70,14 +83,33 @@ void draw() {
     if (z>200)
       z = MAX_Z;
     println(x+"-"+y+"-"+z);
-    sphere.display(x,y,z);
-    sphere.checkCollision(x,y);
-    if (val[3] >= 3) {
-      fire  = new Firewor(4000, new PVector(0, 0), new PVector(0, 10), -1, color(200, 0, 50));
-      fire.display();
+    if (sphere.checkCollision(x, y)) {
+      Pulse pulse = new Pulse(defaultValueX, defaultValueY);
+      pulse.display();
+      //smooth();
+      //theta[0] += 0.02;
+      //theta[1] += 0.03;
+      //theta[2] += 0.01;
+      //noStroke();
+      //fill(0);
+      //for (int i=0; i<2; i++) {
+      //  m=100;
+      //  my=60;
+      //  v[i]=new Vague(theta[i], i, m, my);
+      //  v[i].display();
+      //}
+      //fire  = new Firewor(4000, new PVector(0, 0), new PVector(0, 100), -1, color(200, 0, 50));
+      //  fire.display();
+      sphere.display(lastxtmp, lastytmp, z);
+    } else {
+      firewors.clear();
+      sphere.display(x, y, z);
+      if (val[3] >= 3) {
+        
+      }
     }
   }
-  delay(1000);
+  delay(100);
 }
 
 void addId() {

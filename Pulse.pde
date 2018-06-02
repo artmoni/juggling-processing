@@ -13,8 +13,8 @@ class Pulse {
 
   void display() {
 
-    angle += 5; //<>//
-    float val = cos(radians(angle)) * 12.0;
+    angle += 25; //<>//
+    float val = cos(radians(angle)) * 50.0;
     for (int a = 0; a < 360; a += 75) {
       float xoff = cos(radians(a)) * val;
       float yoff = sin(radians(a)) * val;
@@ -22,6 +22,6 @@ class Pulse {
       ellipse(x + xoff, y + yoff, val, val);
     }
     fill(0,255,0);
-    ellipse(x, y, 2, 2);
+    ellipse(x, y, 25, 25); //<>//
   }
 }
