@@ -1,5 +1,6 @@
 class Pulse { //<>// //<>//
   int x, y;
+  int angle = 0;
 
   Pulse() {
     this.x = displayWidth/2;

@@ -1,7 +1,9 @@
 class Spiral {
   float x;
   float y ;
-
+  int i=0;
+    int inc = 20;
+    int zoom=25;
   Spiral() {
     this.x = displayWidth/2;
     this.y = displayHeight/2;

@@ -1,6 +1,7 @@
 
 class Firewor //Particle
 {
+  int FrameRate = 60;
   PVector pos; //(~10m)
   PVector vit; //(~10m/s = 36km/h)
   PVector acc; //(~10g)

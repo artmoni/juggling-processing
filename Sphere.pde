@@ -1,12 +1,14 @@
-class Sphere //<>// //<>// //<>//
+class Sphere //<>//
 {
   int size;
-  boolean buffer = false;
   int posX, posY, posZ;
   int id;
 
   Sphere() {
     size = 30;
+    posX = displayWidth/2;
+    posY = displayHeight/2;
+    posZ = 80;
   }
   Sphere(int d, int id, int x, int y, int z) {
     this.size=d;
@@ -29,6 +31,15 @@ class Sphere //<>// //<>// //<>//
     popMatrix();
   }
 
+  void displayCoord() {
+    textSize(20);
+    fill(255);
+    text("x = "+this.getPosX(), posX-5*size, posY);
+    text("y = "+this.getPosY(), posX-5*size, posY+20);
+    text("z = "+this.getPosZ(), posX-5*size, posY+40);
+    text("ID = "+this.getId(), posX-5*size, posY+60);
+  }
+  
   boolean checkCollision( int x, int y) {
     //  println("test collision -- x = "+x+"  y = "+y+" --- W = "+displayWidth+"  H = "+displayHeight);
 
@@ -55,7 +66,10 @@ class Sphere //<>// //<>// //<>//
   int getPosZ() {
     return this.posZ;
   }
-
+   int getSize() {
+    return this.size;
+  }
+  
   void setX(int x) {
     this.posX = x;
   }

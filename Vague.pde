@@ -15,7 +15,7 @@ class Vague {
     mY=my;
   }
 
-  void display() {
+  void display(float m,float my) {
     for (int i = j; i <= 100; i++) {
 
       float y = sin(x)*displayHeight/2;
