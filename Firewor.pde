@@ -95,38 +95,38 @@ class Firewor //Particle
       firewors.add(b_inter);
     }
   }
-  
-  
-void display() {
 
-  fill(00, 10);
-  rect(0, 0, width, height);
 
-  for (int i = 0; i < firewors.size(); i++)
-  {
-    Firewor f = (Firewor) firewors.get(i);
-    f.actualise();
-    f.dessine();
-  }
+  void display() {
 
-  //Rajout durée de vie de la particule;
-  for (int i = 0; i < firewors.size(); i++)
-  {
-    Firewor firewor = (Firewor) firewors.get(i);
-    if (frameCount > firewor.date_mort)
+    fill(00, 10);
+    rect(0, 0, width, height);
+
+    for (int i = 0; i < firewors.size(); i++)
     {
-      if (firewor.niveau < 2) {
-        firewor.explose();
+      Firewor f = (Firewor) firewors.get(i);
+      f.actualise();
+      f.dessine();
+    }
+
+    //Rajout durée de vie de la particule;
+    for (int i = 0; i < firewors.size(); i++)
+    {
+      Firewor firewor = (Firewor) firewors.get(i);
+      if (frameCount > firewor.date_mort)
+      {
+        if (firewor.niveau < 2) {
+          firewor.explose();
+        }
+        firewors.remove(i);
       }
-      firewors.remove(i);
+    }
+    if (z < 0 || z > 3 )
+    {
+      float beta = random(PI/2.0 - PI/32.0, PI/2.0 + PI/32.0);
+      color rgb1 = rgbs[(int)random(0, rgbs.length)];
+      Firewor b_tiree = new Firewor(4000, new PVector(map(x, 0, width, lim[0].x, lim[1].x), map(y, height, 0, lim[0].y, lim[1].y)), new PVector(10*cos(beta), 10*sin(beta)), -1, rgb1); //ball_defaut;
+      firewors.add(b_tiree);
     }
   }
-  if (z < 0 || z > 3 )
-  {
-    float beta = random(PI/2.0 - PI/32.0, PI/2.0 + PI/32.0);
-    color rgb1 = rgbs[(int)random(0, rgbs.length)];
-    Firewor b_tiree = new Firewor(4000, new PVector(map(x, 0, width, lim[0].x, lim[1].x), map(y, height, 0, lim[0].y, lim[1].y)), new PVector(10*cos(beta), 10*sin(beta)), -1, rgb1); //ball_defaut;
-    firewors.add(b_tiree);
-  }
-}
 }
