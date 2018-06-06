@@ -12,9 +12,10 @@ public class Juggling extends PApplet {
 	Serial myport;
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
-	int x, y, z = defaultValueZ;
+	// int x, y, z = defaultValueZ;
 	int aX, aY, aZ;
 	int id;
+	PVector pvector;
 
 	// ArrayList firewors;
 	// Firewor firewor_defaut;
@@ -22,11 +23,12 @@ public class Juggling extends PApplet {
 	// PVector[] lim = new PVector[2];
 
 	ArrayList<Sphere> spheres = new ArrayList();
+
 	boolean test = false;
 
-	int lastxtmp = defaultValueX;
-	int lastytmp = defaultValueY;
-	int lastztmp = defaultValueZ;
+	float lastxtmp = defaultValueX;
+	float lastytmp = defaultValueY;
+	float lastztmp = defaultValueZ;
 
 	public static void main(String[] args) {
 
@@ -42,9 +44,9 @@ public class Juggling extends PApplet {
 		size(displayWidth, displayHeight, P3D);
 		defaultValueX = displayWidth / 2;
 		defaultValueY = displayHeight / 2;
-		x = defaultValueX;
-		y = defaultValueY;
-		
+		// x = defaultValueX;
+		// y = defaultValueY;
+		pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 
 		spheres.clear();
 
@@ -62,12 +64,12 @@ public class Juggling extends PApplet {
 
 	}
 
-		public void draw() {
+	public void draw() {
 
 		if (spheres.size() > 0)
 			background(0, 0);
 
-		String buffer = myport.readString();
+		String buffer = myport.readStringUntil('\n');
 		// Protocole start with # to know the id of the club
 		if (buffer != null && buffer.startsWith("#")) {
 			println(buffer);
@@ -96,7 +98,7 @@ public class Juggling extends PApplet {
 				}
 			}
 			if (!(currentSphere instanceof Sphere)) {
-				Sphere sphere = new Sphere(SPHERE_SIZE, id, x, y, z, this);
+				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this);
 				spheres.add(sphere);
 				currentSphere = sphere;
 			}
@@ -107,64 +109,67 @@ public class Juggling extends PApplet {
 	}
 
 	public void checkcollision(Sphere sphere) {
-		if (sphere.checkCollision(x, y)) {
-			// Pulse pulse = new Pulse(defaultValueX, defaultValueY);
-			// pulse.display();
-			// float theta[]={0.0, 0.0, 0.0};
-			// float m = x;
-			// float my = y;
-			// Vague [] v=new Vague[2];
-			// smooth();
-			// theta[0] += 0.02;
-			// theta[1] += 0.03;
-			// theta[2] += 0.01;
-			// noStroke();
-			// fill(0);
-			// for (int j=0; j<2; j++) {
-			// m=100;
-			// my=60;
-			// v[j]=new Vague(theta[j], j, m, my);
-			// v[j].display(m, my);
-			// }
-			sphere.setX(lastxtmp);
-			sphere.setY(lastytmp);
-			sphere.setZ(lastztmp);
-			sphere.display();
-		} else {
-			// firewors.clear();
-			sphere.display();
-			// if (val[3] >= 3) {
-			// fire = new Firewor(4000, new PVector(0, 0), new PVector(0, 100), -1,
-			// color(200, 0, 50));
-			// fire.display();
-			// }
-		}
+		// if (sphere.checkCollision(sphere.getPVector()) {
+		// Pulse pulse = new Pulse(defaultValueX, defaultValueY);
+		// pulse.display();
+		// float theta[]={0.0, 0.0, 0.0};
+		// float m = x;
+		// float my = y;
+		// Vague [] v=new Vague[2];
+		// smooth();
+		// theta[0] += 0.02;
+		// theta[1] += 0.03;
+		// theta[2] += 0.01;
+		// noStroke();
+		// fill(0);
+		// for (int j=0; j<2; j++) {
+		// m=100;
+		// my=60;
+		// v[j]=new Vague(theta[j], j, m, my);
+		// v[j].display(m, my);
+		// }
+		// PVector pVector = new PVector(lastxtmp,lastytmp,lastztmp);
+		// sphere.setVector(pVector);
+		// sphere.display();
+		// } else {
+		// firewors.clear();
+		sphere.display();
+		// if (val[3] >= 3) {
+		// fire = new Firewor(4000, new PVector(0, 0), new PVector(0, 100), -1,
+		// color(200, 0, 50));
+		// fire.display();
+		// }
 	}
+	// }
 
 	public void updateSphereValue(Sphere sphere, float[] val) {
 		if (val.length <= 3)
 			return;
-		if (x <= (displayWidth - SPHERE_SIZE * 2) && x > SPHERE_SIZE * 2 && y < (displayHeight - SPHERE_SIZE * 2)
-				&& y > SPHERE_SIZE * 2) {
-			lastxtmp = x;
-			lastytmp = y;
+		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
+				&& sphere.getPVector().y < (displayHeight - SPHERE_SIZE * 2)
+				&& sphere.getPVector().y > SPHERE_SIZE * 2) {
+
+			lastxtmp = sphere.getPVector().x;
+			lastytmp = sphere.getPVector().y;
 		}
-		int xtmp = x + (parseInt((round(val[1] * 20))));
-		int ytmp = (y - (parseInt(round(val[2] * 20))));
-		int ztmp = (z + (parseInt(round(val[3] * 100))));
+		PVector vtmp = new PVector(sphere.getPVector().x + (parseInt((round(val[1] * 20)))),
+				(sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
+				(sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
+
+		float xtmp = sphere.getPVector().x + (parseInt((round(val[1] * 20))));
+		float ytmp = (sphere.getPVector().y - (parseInt(round(val[2] * 20))));
+		float ztmp = (sphere.getPVector().z + (parseInt(round(val[3] * 100))));
 		// int axtmp = aX+(int((round(val[4]*10))));
 		// int aytmp = aY+(int((round(val[5]*10))));
 		// int aztmp = aZ+(int((round(val[6]*10))));
 
-		if (x != xtmp && xtmp >= sphere.getSize() / 2 && xtmp < displayWidth)
-			x = xtmp;
-		if (y != ytmp && ytmp >= 0 && ytmp < displayHeight)
-			y = ytmp;
+		if (sphere.getPVector().x != xtmp && xtmp >= sphere.getSize() / 2 && xtmp < displayWidth)
+			sphere.getPVector().x = xtmp;
+		if (sphere.getPVector().y != ytmp && ytmp >= 0 && ytmp < displayHeight)
+			sphere.getPVector().y = ytmp;
 		if (ztmp > -200 && ztmp < 200)
-			z = ztmp;
-
-		sphere.setX(x);
-		sphere.setY(y);
-		sphere.setZ(z);
+			sphere.getPVector().z = ztmp;
+		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
+		sphere.setVector(pVector);
 	}
 }
