@@ -1,13 +1,10 @@
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class SendData {
+public class SimpleData {
 	private BufferedReader br = null;
-	private String line;
-
 	public void openFile() {
 		try {
 			this.br = new BufferedReader(new FileReader("dataExemple.txt"));

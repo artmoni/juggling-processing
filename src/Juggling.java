@@ -22,7 +22,7 @@ public class Juggling extends PApplet {
 	// Firewor fire;
 	// PVector[] lim = new PVector[2];
 
-	ArrayList<Sphere> spheres = new ArrayList();
+	ArrayList<Sphere> spheres = new ArrayList<Sphere>();
 
 	boolean test = false;
 
@@ -31,7 +31,7 @@ public class Juggling extends PApplet {
 	float lastztmp = defaultValueZ;
 	
 	
-	SendData sendData = new SendData();
+	SimpleData simpleData = new SimpleData();
 
 	public static void main(String[] args) {
 
@@ -66,7 +66,7 @@ public class Juggling extends PApplet {
 	}
 
 	public void setup() {
-		sendData.openFile();
+		simpleData.openFile();
 		background(0);
 
 	}
@@ -80,11 +80,11 @@ public class Juggling extends PApplet {
 		// String buffer = myport.readStringUntil('\n');
 
 		// With the programme to read data on a txt file
-		String buffer = sendData.getLine();
+		String buffer = simpleData.getLine();
 		if(buffer == null) {
-			sendData.closeFile();
-			sendData.openFile();
-			buffer = sendData.getLine();
+			simpleData.closeFile();
+			simpleData.openFile();
+			buffer = simpleData.getLine();
 		}
 
 		// Protocole start with # to know the id of the club
