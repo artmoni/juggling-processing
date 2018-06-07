@@ -1,3 +1,5 @@
+
+
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -7,15 +9,17 @@ class Sphere
 	int id;
 	PVector pVector;
 	PApplet parent;
+	int color;
 
 	Sphere() {
 		size = 30;
 	}
-	Sphere(int d, int id, PVector pvector, PApplet parent) {
+	Sphere(int d, int id, PVector pvector, PApplet parent,int color) {
 		size = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.parent = parent;
+		this.color = color;
 	}
 
 	void display() {
@@ -23,8 +27,8 @@ class Sphere
 		parent.noStroke();
 
 		parent.pushMatrix();
-		parent.fill(255, 0, 0);
-		parent.lights();
+		parent.fill(color);
+		parent.pointLight(51, 102, 126, this.pVector.x, this.pVector.y, this.pVector.y);
 
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		parent.sphere(size);
@@ -34,7 +38,7 @@ class Sphere
 
 	void displayCoord() {
 		parent.textSize(20);
-		parent.fill(255);
+		parent.fill(color);
 		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y);
 		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20);
 		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40);

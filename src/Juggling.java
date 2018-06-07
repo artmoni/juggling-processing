@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import processing.core.*;
 import processing.serial.Serial;
@@ -116,7 +117,12 @@ public class Juggling extends PApplet {
 			}
 			if (!(currentSphere instanceof Sphere)) {
 				pvector = new PVector(defaultValueX,defaultValueY,defaultValueZ);
-				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this);
+				Random random = new Random();
+				int red = random.nextInt(255) + 1;
+				int blue = random.nextInt(255) + 1;
+				int green = random.nextInt(255) + 1;
+				int color = color(red,green,blue);
+				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this,color);
 				spheres.add(sphere);
 				currentSphere = sphere;
 			}
