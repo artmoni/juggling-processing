@@ -29,6 +29,9 @@ public class Juggling extends PApplet {
 	float lastxtmp = defaultValueX;
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
+	
+	
+	SendData sendData = new SendData();
 
 	public static void main(String[] args) {
 
@@ -40,7 +43,10 @@ public class Juggling extends PApplet {
 	}
 
 	public void settings() {
-		myport = new Serial(this, "/dev/ttyACM0", 9600);
+
+		// Init port for the Arduino data
+		// myport = new Serial(this, "/dev/ttyACM0", 9600);
+		
 		size(displayWidth, displayHeight, P3D);
 		defaultValueX = displayWidth / 2;
 		defaultValueY = displayHeight / 2;
@@ -60,6 +66,7 @@ public class Juggling extends PApplet {
 	}
 
 	public void setup() {
+		sendData.openFile();
 		background(0);
 
 	}
@@ -69,7 +76,12 @@ public class Juggling extends PApplet {
 		if (spheres.size() > 0)
 			background(0, 0);
 
-		String buffer = myport.readStringUntil('\n');
+		// With the Arduino You need to init the port
+		// String buffer = myport.readStringUntil('\n');
+
+		// With the programme to read data on a txt file
+		String buffer = sendData.getLine();
+
 		// Protocole start with # to know the id of the club
 		if (buffer != null && buffer.startsWith("#")) {
 			println(buffer);
