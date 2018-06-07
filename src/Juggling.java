@@ -173,19 +173,16 @@ public class Juggling extends PApplet {
 				(sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
 				(sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
 
-		float xtmp = sphere.getPVector().x + (parseInt((round(val[1] * 20))));
-		float ytmp = (sphere.getPVector().y - (parseInt(round(val[2] * 20))));
-		float ztmp = (sphere.getPVector().z + (parseInt(round(val[3] * 100))));
 		// int axtmp = aX+(int((round(val[4]*10))));
 		// int aytmp = aY+(int((round(val[5]*10))));
 		// int aztmp = aZ+(int((round(val[6]*10))));
 
-		if (sphere.getPVector().x != xtmp && xtmp >= sphere.getSize() / 2 && xtmp < displayWidth)
-			sphere.getPVector().x = xtmp;
-		if (sphere.getPVector().y != ytmp && ytmp >= 0 && ytmp < displayHeight)
-			sphere.getPVector().y = ytmp;
-		if (ztmp > -200 && ztmp < 200)
-			sphere.getPVector().z = ztmp;
+		if (sphere.getPVector().x != vtmp.x && vtmp.x >= sphere.getSize() / 2 && vtmp.x < displayWidth)
+			sphere.getPVector().x = vtmp.x;
+		if (sphere.getPVector().y != vtmp.y && vtmp.y >= 0 && vtmp.y < displayHeight)
+			sphere.getPVector().y = vtmp.y;
+		if (vtmp.z > -200 && vtmp.z < 200)
+			sphere.getPVector().z = vtmp.z;
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
 	}
