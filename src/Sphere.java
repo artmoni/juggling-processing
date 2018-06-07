@@ -1,20 +1,16 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-class Sphere // <>// //<>// //<>//
+class Sphere 
 {
 	int size;
 	int id;
-	// int posX;
-	// int posY;
-	// int posZ;
 	PVector pVector;
 	PApplet parent;
 
 	Sphere() {
 		size = 30;
 	}
-
 	Sphere(int d, int id, PVector pvector, PApplet parent) {
 		size = d;
 		this.id = id;
@@ -26,21 +22,23 @@ class Sphere // <>// //<>// //<>//
 
 		parent.noStroke();
 
+		parent.pushMatrix();
 		parent.fill(255, 0, 0);
 		parent.lights();
 
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		parent.sphere(size);
+		parent.popMatrix();
 
 	}
 
 	void displayCoord() {
 		parent.textSize(20);
 		parent.fill(255);
-		parent.text("x = " + this.getPVector().x, this.pVector.x - 5 * size, this.pVector.y);
-		parent.text("y = " + this.getPVector().y, this.pVector.x - 5 * size, this.pVector.y + 20);
-		parent.text("z = " + this.getPVector().z, this.pVector.x - 5 * size, this.pVector.y + 40);
-		parent.text("ID = " + this.getId(), this.pVector.x - 5 * size, this.pVector.y + 60);
+		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y);
+		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20);
+		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40);
+		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60);
 	}
 
 	boolean checkCollision(PVector vector) {

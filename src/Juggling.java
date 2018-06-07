@@ -115,6 +115,7 @@ public class Juggling extends PApplet {
 				}
 			}
 			if (!(currentSphere instanceof Sphere)) {
+				pvector = new PVector(defaultValueX,defaultValueY,defaultValueZ);
 				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this);
 				spheres.add(sphere);
 				currentSphere = sphere;
@@ -185,5 +186,6 @@ public class Juggling extends PApplet {
 			sphere.getPVector().z = vtmp.z;
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
+		
 	}
 }
