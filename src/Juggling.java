@@ -81,6 +81,11 @@ public class Juggling extends PApplet {
 
 		// With the programme to read data on a txt file
 		String buffer = sendData.getLine();
+		if(buffer == null) {
+			sendData.closeFile();
+			sendData.openFile();
+			buffer = sendData.getLine();
+		}
 
 		// Protocole start with # to know the id of the club
 		if (buffer != null && buffer.startsWith("#")) {
