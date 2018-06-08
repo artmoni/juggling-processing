@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import feuxDartifices.*;
 import processing.core.*;
 import processing.serial.Serial;
 
@@ -32,6 +33,8 @@ public class Juggling extends PApplet {
 	float lastztmp = defaultValueZ;
 
 	SimpleData simpleData = new SimpleData();
+	FeuxDArtificesControleur feux;
+	ArrayList<FeuDartifice> listeFeux = new ArrayList<>();
 
 	public static void main(String[] args) {
 
@@ -63,23 +66,25 @@ public class Juggling extends PApplet {
 		// firewors = new ArrayList();
 		// firewors.add(new Firewor(4000, new PVector(0, 0), new PVector(0, 10), -1,
 		// color(200, 0, 50))); //ball_defaut);
-
 	}
 
 	public void setup() {
 		simpleData.openFile();
+		background(0);
+		feux = new FeuxDArtificesControleur(this);
+
 	}
 
 	public void draw() {
-		pointLight(255, 255, 255, width / 2, height / 2, 1000);
+
 		if (spheres.size() > 0)
 			background(255);
-//		camera((float)(width/2+map(mouseX, 0, width, -2*width, 2*width)), 
-//		         (float)(height/2+map(mouseY, 0, height, -height, height)),
-//		         (float)(height/2/tan((float)(PI*30.0 / 180.0))), 
-//		        (int) width, (double)(height/2.0), (float)0, 
-//		         (float)0, (float)1,(float) 0);
-		
+		// camera((float)(width/2+map(mouseX, 0, width, -2*width, 2*width)),
+		// (float)(height/2+map(mouseY, 0, height, -height, height)),
+		// (float)(height/2/tan((float)(PI*30.0 / 180.0))),
+		// (int) width, (double)(height/2.0), (float)0,
+		// (float)0, (float)1,(float) 0);
+
 		// With the Arduino You need to init the port
 		// String buffer = myport.readStringUntil('\n');
 
@@ -98,17 +103,18 @@ public class Juggling extends PApplet {
 			float val[] = (parseFloat(split(buffer, SEPERATOR)));
 			readDataAndUpdate(val);
 		}
-//		if (spheres.size()>1) {
-//			PVector eye = spheres.get(0).getPVector();
-//			PVector whattosee = spheres.get(1).getPVector();
-//			camera(0, eye.y, eye.z, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
-//		}
+		// if (spheres.size()>1) {
+		// PVector eye = spheres.get(0).getPVector();
+		// PVector whattosee = spheres.get(1).getPVector();
+		// camera(0, eye.y, eye.z, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+		// }
 
 		for (Sphere mySphere : spheres) {
 			// checkcollision(mySphere);
 			mySphere.display();
 			mySphere.displayCoord();
 		}
+		feux.display();
 		delay(100);
 	}
 
@@ -200,6 +206,14 @@ public class Juggling extends PApplet {
 			sphere.getPVector().z = vtmp.z;
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
+		if (vtmp.x >= displayWidth / 2)
+			displayArtifice(vtmp);
+
+	}
+
+	public void displayArtifice(PVector pVector) {
+		feux = new FeuxDArtificesControleur(listeFeux, pVector, this);
+		feux.addFeu();
 
 	}
 }

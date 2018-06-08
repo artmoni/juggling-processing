@@ -5,6 +5,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
+
 class Sphere {
 	int size;
 	int id;
@@ -74,10 +75,10 @@ class Sphere {
 	void displayCoord() {
 		parent.textSize(20);
 		parent.fill(color);
-		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y);
-		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20);
-		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40);
-		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60);
+		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y,this.pVector.z);
+		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20,this.pVector.z);
+		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40,this.pVector.z);
+		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60,this.pVector.z);
 	}
 
 	boolean checkCollision(PVector vector) {
