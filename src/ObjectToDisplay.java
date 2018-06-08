@@ -5,7 +5,7 @@ public abstract class ObjectToDisplay {
 	protected PApplet parent;
 
 	protected int size;
-	protected int id;
+	protected String id;
 	protected PVector pVector;
 	protected PVector vitesse;
 	protected int color;
@@ -61,7 +61,7 @@ public abstract class ObjectToDisplay {
 			return false;
 	}
 
-	protected int getId() {
+	protected String getId() {
 		return this.id;
 	}
 

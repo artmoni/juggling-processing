@@ -7,7 +7,6 @@ import processing.core.*;
 import processing.serial.Serial;
 
 public class Juggling extends PApplet {
-	String SEPERATOR = "$";
 	int MIN_Z = 30, MAX_Z = 200;
 	int SPHERE_SIZE = 50;
 
@@ -15,8 +14,6 @@ public class Juggling extends PApplet {
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
-	int id;
-	PVector pvector;
 
 	// ArrayList firewors;
 	// Firewor firewor_defaut;
@@ -56,7 +53,7 @@ public class Juggling extends PApplet {
 		defaultValueY = displayHeight / 2;
 		// x = defaultValueX;
 		// y = defaultValueY;
-		pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
+
 
 		spheres.clear();
 
@@ -97,13 +94,10 @@ public class Juggling extends PApplet {
 			buffer = simpleData.getLine();
 		}
 
-		// Protocole start with # to know the id of the club
-		if (buffer != null && buffer.startsWith("#")) {
-			println(buffer);
-			buffer = buffer.substring(1);
-			float val[] = (parseFloat(split(buffer, SEPERATOR)));
-			readDataAndUpdate(val);
-		}
+		DataProtocole protocole = new DataProtocole(buffer);
+		
+		ObjectToDisplay objectToDisplay = createSphereIfNotExist(protocole.getResourceId());
+		updateSphereValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
 		// if (spheres.size()>1) {
 		// PVector eye = spheres.get(0).getPVector();
 		// PVector whattosee = spheres.get(1).getPVector();
@@ -119,33 +113,31 @@ public class Juggling extends PApplet {
 		delay(100);
 	}
 
-	public void readDataAndUpdate(float[] val) {
-		if (val != null) {
-			ObjectToDisplay currentSphere = null;
+	public ObjectToDisplay createSphereIfNotExist(String id) {
 
-			int id = parseInt(val[0]);
-			for (ObjectToDisplay maSphere : spheres) {
-				if (maSphere.getId() == id) {
-					currentSphere = maSphere;
-					break;
-				}
+		ObjectToDisplay currentSphere = null;
+
+		for (ObjectToDisplay maSphere : spheres) {
+			if (maSphere.getId().equals(id)) {
+				currentSphere = maSphere;
+				break;
 			}
-			if (!(currentSphere instanceof Sphere)) {
-				pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
-				PVector vitesse = null;
-				Random random = new Random();
-				int red = random.nextInt(255) + 1;
-				int blue = random.nextInt(255) + 1;
-				int green = random.nextInt(255) + 1;
-				int color = color(red, green, blue);
-				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, vitesse, this, color);
-				spheres.add(sphere);
-				currentSphere = sphere;
-			}
-
-			updateSphereValue(currentSphere, val);
-
 		}
+		if (!(currentSphere instanceof Sphere)) {
+			PVector vector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
+			PVector vitesse = null;
+			Random random = new Random();
+			int red = random.nextInt(255) + 1;
+			int blue = random.nextInt(255) + 1;
+			int green = random.nextInt(255) + 1;
+			int color = color(red, green, blue);
+			Sphere sphere = new Sphere(SPHERE_SIZE, id, vector, vitesse, this, color);
+			spheres.add(sphere);
+			currentSphere = sphere;
+		}
+
+		return currentSphere;
+
 	}
 
 	public void checkcollision(ObjectToDisplay sphere) {
@@ -182,9 +174,7 @@ public class Juggling extends PApplet {
 	}
 	// }
 
-	public void updateSphereValue(ObjectToDisplay sphere, float[] val) {
-		if (val.length <= 3)
-			return;
+	public void updateSphereValue(ObjectToDisplay sphere, PVector gyroVector, PVector speedVector) {
 		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
 				&& sphere.getPVector().y < (displayHeight - SPHERE_SIZE * 2)
 				&& sphere.getPVector().y > SPHERE_SIZE * 2) {
@@ -192,11 +182,12 @@ public class Juggling extends PApplet {
 			lastxtmp = sphere.getPVector().x;
 			lastytmp = sphere.getPVector().y;
 		}
-		PVector vtmp = new PVector(sphere.getPVector().x + (parseInt((round(val[1] * 20)))),
-				(sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
-				(sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
+		// PVector vtmp = new PVector(sphere.getPVector().x + (parseInt((round(val[1] *
+		// 20)))),
+		// (sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
+		// (sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
 
-		PVector speed = new PVector(round(val[4]), round(val[5]), round(val[6]));
+		PVector vtmp = sphere.getPVector().add(gyroVector);
 
 		if (sphere.getPVector().x != vtmp.x && vtmp.x >= sphere.getSize() / 2 && vtmp.x < displayWidth)
 			sphere.getPVector().x = vtmp.x;
@@ -204,11 +195,10 @@ public class Juggling extends PApplet {
 			sphere.getPVector().y = vtmp.y;
 		if (vtmp.z > -200 && vtmp.z < 200)
 			sphere.getPVector().z = vtmp.z;
+
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
-		sphere.setVitesse(speed);
-		if (vtmp.x >= displayWidth / 2)
-			displayArtifice(vtmp);
+		sphere.setVitesse(speedVector);
 	}
 
 	public void displayArtifice(PVector pVector) {
