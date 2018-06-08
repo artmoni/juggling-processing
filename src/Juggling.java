@@ -74,7 +74,12 @@ public class Juggling extends PApplet {
 		pointLight(255, 255, 255, width / 2, height / 2, 1000);
 		if (spheres.size() > 0)
 			background(255);
-
+//		camera((float)(width/2+map(mouseX, 0, width, -2*width, 2*width)), 
+//		         (float)(height/2+map(mouseY, 0, height, -height, height)),
+//		         (float)(height/2/tan((float)(PI*30.0 / 180.0))), 
+//		        (int) width, (double)(height/2.0), (float)0, 
+//		         (float)0, (float)1,(float) 0);
+		
 		// With the Arduino You need to init the port
 		// String buffer = myport.readStringUntil('\n');
 
@@ -93,6 +98,11 @@ public class Juggling extends PApplet {
 			float val[] = (parseFloat(split(buffer, SEPERATOR)));
 			readDataAndUpdate(val);
 		}
+//		if (spheres.size()>1) {
+//			PVector eye = spheres.get(0).getPVector();
+//			PVector whattosee = spheres.get(1).getPVector();
+//			camera(0, eye.y, eye.z, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+//		}
 
 		for (Sphere mySphere : spheres) {
 			// checkcollision(mySphere);
