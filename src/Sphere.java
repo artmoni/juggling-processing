@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import processing.core.PApplet;
@@ -33,7 +34,7 @@ class Sphere extends ObjectToDisplay {
 		return textureSphere(200, 200, 200, img);
 	}
 
-	protected void initializeSphere(int numPtsW, int numPtsH_2pi) {
+	void initializeSphere(int numPtsW, int numPtsH_2pi) {
 
 		// The number of points around the width and height
 		numPointsW = numPtsW + 1;
@@ -102,5 +103,17 @@ class Sphere extends ObjectToDisplay {
 		}
 		ps.endShape();
 		return ps;
+	}
+
+	public Sphere collision(ArrayList<Sphere> spheres) {
+		Sphere ballA = this;
+		for (int j = 0; j < spheres.size(); j++) {
+			Sphere ballB = (Sphere) spheres.get(j);
+			if (ballA.getId()!=ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size)*2) {
+				// bounce(ballA, ballB);
+				return ballB;
+			}
+		}
+		return null;
 	}
 }

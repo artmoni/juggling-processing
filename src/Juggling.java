@@ -1,4 +1,5 @@
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,6 +8,7 @@ import processing.core.*;
 import processing.serial.Serial;
 
 public class Juggling extends PApplet {
+	String SEPERATOR = "$";
 	int MIN_Z = 30, MAX_Z = 200;
 	int SPHERE_SIZE = 50;
 
@@ -14,6 +16,9 @@ public class Juggling extends PApplet {
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
+	int aX, aY, aZ;
+	int id;
+	PVector pvector;
 
 	// ArrayList firewors;
 	// Firewor firewor_defaut;
@@ -27,8 +32,6 @@ public class Juggling extends PApplet {
 	float lastxtmp = defaultValueX;
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
-
-	float defaultVitesse = 2;
 
 	SimpleData simpleData = new SimpleData();
 	FeuxDArtificesControleur feux;
@@ -53,7 +56,7 @@ public class Juggling extends PApplet {
 		defaultValueY = displayHeight / 2;
 		// x = defaultValueX;
 		// y = defaultValueY;
-
+		pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 
 		spheres.clear();
 
@@ -138,6 +141,7 @@ public class Juggling extends PApplet {
 
 		return currentSphere;
 
+		}
 	}
 
 	public void checkcollision(ObjectToDisplay sphere) {
@@ -195,7 +199,6 @@ public class Juggling extends PApplet {
 			sphere.getPVector().y = vtmp.y;
 		if (vtmp.z > -200 && vtmp.z < 200)
 			sphere.getPVector().z = vtmp.z;
-
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
 		sphere.setVitesse(speedVector);
