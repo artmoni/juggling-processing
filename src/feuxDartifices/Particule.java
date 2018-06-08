@@ -24,6 +24,7 @@ public abstract class Particule {
 	public void display() {
 		parent.fill(color);
 		pShape = getShape();
+		parent.translate(0, 0, 1000);
 		parent.shape(pShape);
 		// parent.ellipse(pVector.x, pVector.y, size, size);
 	}

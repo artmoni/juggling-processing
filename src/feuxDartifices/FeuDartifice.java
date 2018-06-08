@@ -20,7 +20,7 @@ public class FeuDartifice {
 
 	public FeuDartifice(PVector pv, PApplet parent) {
 		this.listParticule = new ArrayList<Particule>();
-		this.pVector = pv;
+		this.pVector = pv.copy();
 		this.parent = parent;
 		creerListeParticule(pv);
 	}

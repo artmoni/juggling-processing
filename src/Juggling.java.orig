@@ -1,4 +1,5 @@
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,6 +8,7 @@ import processing.core.*;
 import processing.serial.Serial;
 
 public class Juggling extends PApplet {
+	String SEPERATOR = "$";
 	int MIN_Z = 30, MAX_Z = 200;
 	int SPHERE_SIZE = 50;
 
@@ -14,6 +16,9 @@ public class Juggling extends PApplet {
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
+	int aX, aY, aZ;
+	int id;
+	PVector pvector;
 
 	// ArrayList firewors;
 	// Firewor firewor_defaut;
@@ -28,11 +33,9 @@ public class Juggling extends PApplet {
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
 
-	float defaultVitesse = 2;
-
 	SimpleData simpleData = new SimpleData();
-	FeuxDArtificesControleur feux;
-	ArrayList<FeuDartifice> listeFeux = new ArrayList<>();
+	FeuxDArtificesControleur feuControlleur;
+	String buffer;
 
 	public static void main(String[] args) {
 
@@ -46,13 +49,14 @@ public class Juggling extends PApplet {
 	public void settings() {
 
 		// Init port for the Arduino data
-		myport = new Serial(this, "/dev/ttyACM0", 9600);
+		myport = new Serial(this, "/dev/ttyACM1", 9600);
 
 		size(displayWidth, displayHeight, P3D);
 		defaultValueX = displayWidth / 2;
 		defaultValueY = displayHeight / 2;
 		// x = defaultValueX;
 		// y = defaultValueY;
+		pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 
 		spheres.clear();
 
@@ -68,73 +72,96 @@ public class Juggling extends PApplet {
 	public void setup() {
 		simpleData.openFile();
 		background(0);
-		feux = new FeuxDArtificesControleur(this);
-
+		feuControlleur = new FeuxDArtificesControleur(this);
+		feuControlleur.addFeu(new PVector(width / 2, height / 2));
 	}
 
 	public void draw() {
 
 		if (spheres.size() > 0)
 			background(255);
+		// camera((float)(width/2+map(mouseX, 0, width, -2*width, 2*width)),
+		// (float)(height/2+map(mouseY, 0, height, -height, height)),
+		// (float)(height/2/tan((float)(PI*30.0 / 180.0))),
+		// (int) width, (double)(height/2.0), (float)0,
+		// (float)0, (float)1,(float) 0);
 
 		// With the Arduino You need to init the port
-//		String buffer = myport.readStringUntil('\n');
+		buffer = myport.readStringUntil('\n');
 
 		// With the programme to read data on a txt file
-		 String buffer = simpleData.getLine();
-		 if (buffer == null) {
-		 simpleData.closeFile();
-		 simpleData.openFile();
-		 buffer = simpleData.getLine();
-		 }
-		try {
-			DataProtocole protocole = new DataProtocole(buffer);
+		// String buffer = simpleData.getLine();
+		//
+		// if (buffer == null) {
+		// simpleData.closeFile();
+		// simpleData.openFile();
+		// buffer = simpleData.getLine();
+		// }
 
-			ObjectToDisplay objectToDisplay = createSphereIfNotExist(protocole.getResourceId());
-			updateSphereValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
-
-			if (spheres.size() > 1) {
-				PVector eye = spheres.get(0).getPVector();
-				PVector whattosee = spheres.get(1).getPVector();
-				// camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
-				// camera(mouseX, height / 2, (height / 2) / tan(PI / 6), mouseX, height / 2,
-				// tan(PI) * width, 0, 1, 0);
-			}
-
-			for (Sphere mySphere : spheres) {
-				// checkcollision(mySphere);
-
-				Sphere collision = mySphere.collision(spheres);
-				if (collision instanceof Sphere) {
-					PVector ab = new PVector();
-					ab.set(mySphere.pVector);
-					ab.sub(collision.pVector);
-					ab.normalize();
-					while (mySphere.pVector.dist(collision.pVector) < (mySphere.getSize() + collision.getSize()) * 4) {
-						// *spring) {
-						mySphere.pVector.add(ab);
-					}
-					PVector n = PVector.sub(mySphere.pVector, collision.pVector);
-					n.normalize();
-					PVector u = PVector.sub(mySphere.pVector, collision.pVector);
-					PVector un = u.mult(n.dot(u));
-
-					u.sub(un);
-					mySphere.setVector(mySphere.getPVector().sub(u));
-					// mySphere.speed = PVector.add(u, collision.speed);
-					// collision.speed = PVector.add(un, collision.speed);
-					// mySphere.setVector(mySphere.getPVector().copy().mult(-1));
-					mySphere.display();
-					println("collision with " + collision.getId());
-				} else {
-					mySphere.display();
-					mySphere.displayCoord();
-				}
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
+<<<<<<< Updated upstream
+		DataProtocole protocole = new DataProtocole(buffer);
+		
+		ObjectToDisplay objectToDisplay = createSphereIfNotExist(protocole.getResourceId());
+		updateSphereValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
+		// if (spheres.size()>1) {
+		// PVector eye = spheres.get(0).getPVector();
+		// PVector whattosee = spheres.get(1).getPVector();
+		// camera(0, eye.y, eye.z, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+		// }
+=======
+		// Protocole start with # to know the id of the club
+		if (buffer != null && buffer.startsWith("#")) {
+			println(buffer);
+			buffer = buffer.substring(1);
+			float val[] = (parseFloat(split(buffer, SEPERATOR)));
+			readDataAndUpdate(val);
 		}
-		feux.display();
+		if (spheres.size() > 1) {
+			PVector eye = spheres.get(0).getPVector();
+			PVector whattosee = spheres.get(1).getPVector();
+			// camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+			camera(mouseX, height / 2, width / 2 + 1000, mouseX, height / 2, 2 * tan(PI) * width, 0, 1, 0);
+
+		}
+>>>>>>> Stashed changes
+
+		for (ObjectToDisplay mySphere : spheres) {
+			// checkcollision(mySphere);
+<<<<<<< Updated upstream
+			mySphere.display();
+			mySphere.displayCoord();
+=======
+
+			Sphere collision = mySphere.collision(spheres);
+			if (collision instanceof Sphere) {
+				PVector ab = new PVector();
+				ab.set(mySphere.pVector);
+				ab.sub(collision.pVector);
+				ab.normalize();
+				while (mySphere.pVector.dist(collision.pVector) < (mySphere.getSize() + collision.getSize()) * 4) {
+					// *spring) {
+					mySphere.pVector.add(ab);
+				}
+				PVector n = PVector.sub(mySphere.pVector, collision.pVector);
+				n.normalize();
+				PVector u = PVector.sub(mySphere.pVector, collision.pVector);
+				PVector un = u.mult(n.dot(u));
+
+				u.sub(un);
+				mySphere.setVector(mySphere.getPVector().sub(u));
+				// mySphere.speed = PVector.add(u, collision.speed);
+				// collision.speed = PVector.add(un, collision.speed);
+				// mySphere.setVector(mySphere.getPVector().copy().mult(-1));
+				mySphere.display();
+				feuControlleur.addFeu(collision.getPVector());
+			} else {
+				mySphere.display();
+				mySphere.displayCoord();
+			}
+>>>>>>> Stashed changes
+		}
+		feuControlleur.display();
+
 		delay(100);
 	}
 
@@ -163,6 +190,7 @@ public class Juggling extends PApplet {
 
 		return currentSphere;
 
+		}
 	}
 
 	public void checkcollision(ObjectToDisplay sphere) {
@@ -220,10 +248,12 @@ public class Juggling extends PApplet {
 			sphere.getPVector().y = vtmp.y;
 		if (vtmp.z > -200 && vtmp.z < 200)
 			sphere.getPVector().z = vtmp.z;
-
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
+<<<<<<< Updated upstream
 		sphere.setVitesse(speedVector);
+=======
+>>>>>>> Stashed changes
 	}
 
 }
