@@ -1,4 +1,5 @@
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -109,7 +110,7 @@ public class Juggling extends PApplet {
 		// camera(0, eye.y, eye.z, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
 		// }
 
-		for (Sphere mySphere : spheres) {
+		for (ObjectToDisplay mySphere : spheres) {
 			// checkcollision(mySphere);
 			mySphere.display();
 			mySphere.displayCoord();
@@ -120,10 +121,10 @@ public class Juggling extends PApplet {
 
 	public void readDataAndUpdate(float[] val) {
 		if (val != null) {
-			Sphere currentSphere = null;
+			ObjectToDisplay currentSphere = null;
 
 			int id = parseInt(val[0]);
-			for (Sphere maSphere : spheres) {
+			for (ObjectToDisplay maSphere : spheres) {
 				if (maSphere.getId() == id) {
 					currentSphere = maSphere;
 					break;
@@ -146,7 +147,7 @@ public class Juggling extends PApplet {
 		}
 	}
 
-	public void checkcollision(Sphere sphere) {
+	public void checkcollision(ObjectToDisplay sphere) {
 		// if (sphere.checkCollision(sphere.getPVector()) {
 		// Pulse pulse = new Pulse(defaultValueX, defaultValueY);
 		// pulse.display();
@@ -180,7 +181,7 @@ public class Juggling extends PApplet {
 	}
 	// }
 
-	public void updateSphereValue(Sphere sphere, float[] val) {
+	public void updateSphereValue(ObjectToDisplay sphere, float[] val) {
 		if (val.length <= 3)
 			return;
 		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
@@ -208,7 +209,6 @@ public class Juggling extends PApplet {
 		sphere.setVector(pVector);
 		if (vtmp.x >= displayWidth / 2)
 			displayArtifice(vtmp);
-
 	}
 
 	public void displayArtifice(PVector pVector) {

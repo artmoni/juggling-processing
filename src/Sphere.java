@@ -3,38 +3,10 @@ import java.util.Random;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PShape;
 import processing.core.PVector;
 
-
-class Sphere {
-	int size;
-	int id;
-	PVector pVector;
-	PApplet parent;
-	int color;
-
-	int ptsW, ptsH;
-
-	int numPointsW;
-	int numPointsH_2pi;
-	int numPointsH;
-
-	float[] coorX;
-	float[] coorY;
-	float[] coorZ;
-	float[] multXZ;
-	PImage img;
-
-	String texture[]= {
-			"img/texture_earth.jpg",
-			"img/planet_pluto.jpg",
-			"img/planet_pluto2.jpg",
-			"img/planet_miranda.jpg",
-			"img/texture_adidas.jpg",
-			"img/texture_foot.jpg",
-			"img/texture_football.png",
-			"img/texture_strawberry.jpg",
-	};
+class Sphere extends ObjectToDisplay {
 	Sphere() {
 		size = 30;
 	}
@@ -48,66 +20,19 @@ class Sphere {
 		this.ptsW = 30;
 		this.ptsH = 30;
 		initializeSphere(ptsW, ptsH);
-		 img=parent.loadImage(texture[new Random().nextInt(texture.length)]);
-//		img = parent.loadImage("img/texture_strawberry.jpg");
-//		img = parent.loadImage("img/texture_strawberry.jpg");
-//		img = parent.loadImage("img/texture_strawberry.jpg");
-//		img = parent.loadImage("img/texture_strawberry.jpg");
+		img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
+		// img = parent.loadImage("img/texture_strawberry.jpg");
+		// img = parent.loadImage("img/texture_strawberry.jpg");
+		// img = parent.loadImage("img/texture_strawberry.jpg");
+		// img = parent.loadImage("img/texture_strawberry.jpg");
 
 	}
 
-	void display() {
-
-		parent.noStroke();
-
-		parent.pushMatrix();
-		parent.fill(color);
-
-		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
-		// parent.sphere(size);
-		parent.rotate(this.pVector.dist(new PVector(0, 0, 0))*10, this.pVector.x, this.pVector.y, this.pVector.y);
-		textureSphere(200, 200, 200, img);
-
-		parent.popMatrix();
-
+	protected PShape getShape() {
+		return textureSphere(200, 200, 200, img);
 	}
 
-	void displayCoord() {
-		parent.textSize(20);
-		parent.fill(color);
-		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y,this.pVector.z);
-		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20,this.pVector.z);
-		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40,this.pVector.z);
-		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60,this.pVector.z);
-	}
-
-	boolean checkCollision(PVector vector) {
-		if (vector.x > (parent.displayWidth - size * 2) || vector.x < size * 2) {
-			return true;
-		}
-		if (vector.y > (parent.displayHeight - size * 2) || vector.y < size * 2) {
-			return true;
-		} else
-			return false;
-	}
-
-	int getId() {
-		return this.id;
-	}
-
-	float getSize() {
-		return this.size;
-	}
-
-	PVector getPVector() {
-		return this.pVector;
-	}
-
-	void setVector(PVector vector) {
-		this.pVector = vector;
-	}
-
-	void initializeSphere(int numPtsW, int numPtsH_2pi) {
+	protected void initializeSphere(int numPtsW, int numPtsH_2pi) {
 
 		// The number of points around the width and height
 		numPointsW = numPtsW + 1;
@@ -147,15 +72,15 @@ class Sphere {
 		}
 	}
 
-	void textureSphere(float rx, float ry, float rz, PImage t) {
+	PShape textureSphere(float rx, float ry, float rz, PImage t) {
 		// These are so we can map certain parts of the image on to the shape
 		float changeU = t.width / (float) (numPointsW - 1);
 		float changeV = t.height / (float) (numPointsH - 1);
 		float u = 0; // Width variable for the texture
 		float v = 0; // Height variable for the texture
-
-		parent.beginShape(PApplet.TRIANGLE_STRIP);
-		parent.texture(t);
+		PShape ps = parent.createShape();
+		ps.beginShape(PApplet.TRIANGLE_STRIP);
+		ps.texture(t);
 		for (int i = 0; i < (numPointsH - 1); i++) { // For all the rings but top and bottom
 			// Goes into the array here instead of loop to save time
 			float coory = coorY[i];
@@ -165,15 +90,16 @@ class Sphere {
 			float multxzPlus = multXZ[i + 1];
 
 			for (int j = 0; j < numPointsW; j++) { // For all the pts in the ring
-				parent.normal(-coorX[j] * multxz, -coory, -coorZ[j] * multxz);
-				parent.vertex(coorX[j] * multxz * rx, coory * ry, coorZ[j] * multxz * rz, u, v);
-				parent.normal(-coorX[j] * multxzPlus, -cooryPlus, -coorZ[j] * multxzPlus);
-				parent.vertex(coorX[j] * multxzPlus * rx, cooryPlus * ry, coorZ[j] * multxzPlus * rz, u, v + changeV);
+				ps.normal(-coorX[j] * multxz, -coory, -coorZ[j] * multxz);
+				ps.vertex(coorX[j] * multxz * rx, coory * ry, coorZ[j] * multxz * rz, u, v);
+				ps.normal(-coorX[j] * multxzPlus, -cooryPlus, -coorZ[j] * multxzPlus);
+				ps.vertex(coorX[j] * multxzPlus * rx, cooryPlus * ry, coorZ[j] * multxzPlus * rz, u, v + changeV);
 				u += changeU;
 			}
 			v += changeV;
 			u = 0;
 		}
-		parent.endShape();
+		ps.endShape();
+		return ps;
 	}
 }
