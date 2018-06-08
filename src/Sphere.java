@@ -1,10 +1,8 @@
 
-
 import processing.core.PApplet;
 import processing.core.PVector;
 
-class Sphere 
-{
+class Sphere {
 	int size;
 	int id;
 	PVector pVector;
@@ -14,7 +12,8 @@ class Sphere
 	Sphere() {
 		size = 30;
 	}
-	Sphere(int d, int id, PVector pvector, PApplet parent,int color) {
+
+	Sphere(int d, int id, PVector pvector, PApplet parent, int color) {
 		size = d;
 		this.id = id;
 		this.pVector = pvector;
@@ -28,7 +27,6 @@ class Sphere
 
 		parent.pushMatrix();
 		parent.fill(color);
-		parent.pointLight(51, 102, 126, this.pVector.x, this.pVector.y, this.pVector.y);
 
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		parent.sphere(size);
@@ -46,8 +44,6 @@ class Sphere
 	}
 
 	boolean checkCollision(PVector vector) {
-		// println("test collision -- x = "+x+" y = "+y+" --- W = "+displayWidth+" H =
-		// "+displayHeight);
 		if (vector.x > (parent.displayWidth - size * 2) || vector.x < size * 2) {
 			return true;
 		}
@@ -60,18 +56,6 @@ class Sphere
 	int getId() {
 		return this.id;
 	}
-	//
-	// float getPosX() {
-	// return this.pVector.x;
-	// }
-	//
-	// float getPosY() {
-	// return this.pVector.y;
-	// }
-	//
-	// float getPosZ() {
-	// return this.pVector.z;
-	// }
 
 	float getSize() {
 		return this.size;
@@ -81,23 +65,7 @@ class Sphere
 		return this.pVector;
 	}
 
-	//
-	// void setX(float x) {
-	// this.pVector.x = x;
-	// }
-	//
-	// void setY(float y) {
-	// this.pVector.y = y;
-	// }
-	//
-	// void setZ(float z) {
-	// this.pVector.z = z;
-	// }
 	void setVector(PVector vector) {
 		this.pVector = vector;
-	}
-
-	void destroy() {
-		this.size = 0;
 	}
 }

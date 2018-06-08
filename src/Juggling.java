@@ -30,8 +30,7 @@ public class Juggling extends PApplet {
 	float lastxtmp = defaultValueX;
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
-	
-	
+
 	SimpleData simpleData = new SimpleData();
 
 	public static void main(String[] args) {
@@ -47,7 +46,7 @@ public class Juggling extends PApplet {
 
 		// Init port for the Arduino data
 		// myport = new Serial(this, "/dev/ttyACM0", 9600);
-		
+
 		size(displayWidth, displayHeight, P3D);
 		defaultValueX = displayWidth / 2;
 		defaultValueY = displayHeight / 2;
@@ -64,25 +63,24 @@ public class Juggling extends PApplet {
 		// firewors = new ArrayList();
 		// firewors.add(new Firewor(4000, new PVector(0, 0), new PVector(0, 10), -1,
 		// color(200, 0, 50))); //ball_defaut);
+
 	}
 
 	public void setup() {
 		simpleData.openFile();
-		background(0);
-
 	}
 
 	public void draw() {
-
+		pointLight(255, 255, 255, width / 2, height / 2, 1000);
 		if (spheres.size() > 0)
-			background(0, 0);
+			background(255);
 
 		// With the Arduino You need to init the port
 		// String buffer = myport.readStringUntil('\n');
 
 		// With the programme to read data on a txt file
 		String buffer = simpleData.getLine();
-		if(buffer == null) {
+		if (buffer == null) {
 			simpleData.closeFile();
 			simpleData.openFile();
 			buffer = simpleData.getLine();
@@ -116,13 +114,13 @@ public class Juggling extends PApplet {
 				}
 			}
 			if (!(currentSphere instanceof Sphere)) {
-				pvector = new PVector(defaultValueX,defaultValueY,defaultValueZ);
+				pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 				Random random = new Random();
 				int red = random.nextInt(255) + 1;
 				int blue = random.nextInt(255) + 1;
 				int green = random.nextInt(255) + 1;
-				int color = color(red,green,blue);
-				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this,color);
+				int color = color(red, green, blue);
+				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this, color);
 				spheres.add(sphere);
 				currentSphere = sphere;
 			}
@@ -157,7 +155,7 @@ public class Juggling extends PApplet {
 		// sphere.display();
 		// } else {
 		// firewors.clear();
-		sphere.display();
+		// sphere.display();
 		// if (val[3] >= 3) {
 		// fire = new Firewor(4000, new PVector(0, 0), new PVector(0, 100), -1,
 		// color(200, 0, 50));
@@ -192,6 +190,6 @@ public class Juggling extends PApplet {
 			sphere.getPVector().z = vtmp.z;
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
-		
+
 	}
 }
