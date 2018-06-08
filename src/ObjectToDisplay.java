@@ -1,15 +1,13 @@
-import processing.core.PApplet;
-import processing.core.PImage;
-import processing.core.PShape;
-import processing.core.PVector;
+import processing.core.*;
 
 public abstract class ObjectToDisplay {
+
+	protected PApplet parent;
 
 	protected int size;
 	protected int id;
 	protected PVector pVector;
 	protected PVector vitesse;
-	protected PApplet parent;
 	protected int color;
 	protected int ptsW;
 	protected int ptsH;
@@ -33,6 +31,7 @@ public abstract class ObjectToDisplay {
 		parent.pushMatrix();
 		parent.fill(color);
 
+		this.pVector.add(vitesse);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		// parent.sphere(size);
 		parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x, this.pVector.y, this.pVector.y);
@@ -49,6 +48,7 @@ public abstract class ObjectToDisplay {
 		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20, this.pVector.z);
 		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40, this.pVector.z);
 		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60, this.pVector.z);
+		parent.text("vitesse = " + this.getVitesse(), this.pVector.x - 3 * size, this.pVector.y + 80, this.pVector.z);
 	}
 
 	boolean checkCollision(PVector vector) {
@@ -73,8 +73,16 @@ public abstract class ObjectToDisplay {
 		return this.pVector;
 	}
 
+	protected PVector getVitesse() {
+		return this.vitesse;
+	}
+
 	protected void setVector(PVector vector) {
 		this.pVector = vector;
+	}
+
+	protected void setVitesse(PVector vector) {
+		this.vitesse = vector;
 	}
 
 	protected abstract PShape getShape();

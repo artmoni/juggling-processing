@@ -1,5 +1,4 @@
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,7 +15,6 @@ public class Juggling extends PApplet {
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
-	int aX, aY, aZ;
 	int id;
 	PVector pvector;
 
@@ -32,6 +30,8 @@ public class Juggling extends PApplet {
 	float lastxtmp = defaultValueX;
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
+
+	float defaultVitesse = 2;
 
 	SimpleData simpleData = new SimpleData();
 	FeuxDArtificesControleur feux;
@@ -132,12 +132,13 @@ public class Juggling extends PApplet {
 			}
 			if (!(currentSphere instanceof Sphere)) {
 				pvector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
+				PVector vitesse = null;
 				Random random = new Random();
 				int red = random.nextInt(255) + 1;
 				int blue = random.nextInt(255) + 1;
 				int green = random.nextInt(255) + 1;
 				int color = color(red, green, blue);
-				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, this, color);
+				Sphere sphere = new Sphere(SPHERE_SIZE, id, pvector, vitesse, this, color);
 				spheres.add(sphere);
 				currentSphere = sphere;
 			}
@@ -195,9 +196,7 @@ public class Juggling extends PApplet {
 				(sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
 				(sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
 
-		// int axtmp = aX+(int((round(val[4]*10))));
-		// int aytmp = aY+(int((round(val[5]*10))));
-		// int aztmp = aZ+(int((round(val[6]*10))));
+		PVector speed = new PVector(round(val[4]), round(val[5]), round(val[6]));
 
 		if (sphere.getPVector().x != vtmp.x && vtmp.x >= sphere.getSize() / 2 && vtmp.x < displayWidth)
 			sphere.getPVector().x = vtmp.x;
@@ -207,6 +206,7 @@ public class Juggling extends PApplet {
 			sphere.getPVector().z = vtmp.z;
 		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
 		sphere.setVector(pVector);
+		sphere.setVitesse(speed);
 		if (vtmp.x >= displayWidth / 2)
 			displayArtifice(vtmp);
 	}
