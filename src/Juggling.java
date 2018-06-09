@@ -30,7 +30,9 @@ public class Juggling extends PApplet {
 
 	float defaultVitesse = 2;
 
-	SimpleData simpleData = new SimpleData();
+	SampleData simpleData = new SampleData();
+	String buffer;
+
 	FeuxDArtificesControleur feux;
 	ArrayList<FeuDartifice> listeFeux = new ArrayList<>();
 
@@ -46,7 +48,6 @@ public class Juggling extends PApplet {
 	public void settings() {
 
 		// Init port for the Arduino data
-		myport = new Serial(this, "/dev/ttyACM0", 9600);
 
 		size(displayWidth, displayHeight, P3D);
 		defaultValueX = displayWidth / 2;
@@ -66,7 +67,11 @@ public class Juggling extends PApplet {
 	}
 
 	public void setup() {
-		simpleData.openFile();
+		try {
+			myport = new Serial(this, "/dev/ttyACM0", 9600);
+		} catch (Exception e) {
+			simpleData.openFile();
+		}
 		background(0);
 		feux = new FeuxDArtificesControleur(this);
 
@@ -77,16 +82,18 @@ public class Juggling extends PApplet {
 		if (spheres.size() > 0)
 			background(255);
 
-		// With the Arduino You need to init the port
-//		String buffer = myport.readStringUntil('\n');
-
-		// With the programme to read data on a txt file
-		 String buffer = simpleData.getLine();
-		 if (buffer == null) {
-		 simpleData.closeFile();
-		 simpleData.openFile();
-		 buffer = simpleData.getLine();
-		 }
+		if (myport != null) {
+			// With the Arduino You need to init the port
+			buffer = myport.readStringUntil('\n');
+		} else {
+			// With the programme to read data on a txt file
+			buffer = simpleData.getLine();
+			if (buffer == null) {
+				simpleData.closeFile();
+				simpleData.openFile();
+				buffer = simpleData.getLine();
+			}
+		}
 		try {
 			DataProtocole protocole = new DataProtocole(buffer);
 
