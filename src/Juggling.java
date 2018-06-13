@@ -28,7 +28,7 @@ public class Juggling extends PApplet {
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
 
-	float defaultVitesse = 2;
+	float defaultSpeed = 2;
 
 	SampleData simpleData = new SampleData();
 	String buffer;
@@ -157,13 +157,13 @@ public class Juggling extends PApplet {
 		}
 		if (!(currentSphere instanceof Sphere)) {
 			PVector vector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
-			PVector vitesse = null;
+			PVector speed = null;
 			Random random = new Random();
 			int red = random.nextInt(255) + 1;
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			Sphere sphere = new Sphere(SPHERE_SIZE, id, vector, vitesse, this, color);
+			Sphere sphere = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
 			spheres.add(sphere);
 			currentSphere = sphere;
 		}
@@ -234,7 +234,7 @@ public class Juggling extends PApplet {
 
 		PVector pVector = new PVector(x,y,z);
 		sphere.setVector(pVector);
-		sphere.setVitesse(speedVector);
+		sphere.setSpeed(speedVector);
 	}
 
 }
