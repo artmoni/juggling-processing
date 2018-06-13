@@ -31,7 +31,7 @@ public abstract class ObjectToDisplay {
 		parent.pushMatrix();
 		parent.fill(color);
 
-//		this.pVector.add(vitesse);
+		this.pVector.add(vitesse);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		// parent.sphere(size);
 //		parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x, this.pVector.y, this.pVector.y);

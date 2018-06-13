@@ -221,14 +221,18 @@ public class Juggling extends PApplet {
 
 		PVector vtmp = sphere.getPVector().add(gyroVector);
 
+		float x = sphere.getPVector().x;
+		float y = sphere.getPVector().y;
+		float z = sphere.getPVector().z;
+		
 		if (sphere.getPVector().x != vtmp.x && vtmp.x >= sphere.getSize() / 2 && vtmp.x < displayWidth)
-			sphere.getPVector().x = vtmp.x;
+			x = vtmp.x;
 		if (sphere.getPVector().y != vtmp.y && vtmp.y >= 0 && vtmp.y < displayHeight)
-			sphere.getPVector().y = vtmp.y;
+			y = vtmp.y;
 		if (vtmp.z > -200 && vtmp.z < 200)
-			sphere.getPVector().z = vtmp.z;
+			z = vtmp.z;
 
-		PVector pVector = new PVector(sphere.getPVector().x, sphere.getPVector().y, sphere.getPVector().z);
+		PVector pVector = new PVector(x,y,z);
 		sphere.setVector(pVector);
 		sphere.setVitesse(speedVector);
 	}
