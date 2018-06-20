@@ -20,15 +20,19 @@ public class FeuxDArtificesControleur {
 		// if (i > 0 && i % parent.width > 0)
 		// parent.pixels[i - 1] = parent.pixels[i];
 		// parent.updatePixels();
+		// parent.pushMatrix();
+
 		for (int i = 0; i < feux.size(); i++) {
 			if (feux.get(i).getListe().isEmpty()) {
 				feux.remove(i);
 			} else
 				feux.get(i).display();
 		}
+		// parent.popMatrix();
 	}
 
 	public void addFeu(PVector startFire) {
+		System.out.println(feux.size());
 		feux.add(new FeuDartifice(startFire, this.parent));
 	}
 

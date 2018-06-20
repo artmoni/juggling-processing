@@ -1,4 +1,5 @@
 package feuxDartifices;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -49,7 +50,7 @@ public class FeuDartifice {
 	public void creerListeParticule(PVector pv) {
 		for (int i = 0; i < SIZE_LIST; i++) {
 			pv.set(pv.x + (i * 2), pv.y + (i * 2));
-			Particule particule = creerParticule(pv);
+			Particule particule = creerParticule(pv.copy());
 			listParticule.add(particule);
 		}
 	}
@@ -62,7 +63,7 @@ public class FeuDartifice {
 			} else
 				listParticule.remove(i);
 
-//			System.out.println(listParticule.size());
+			// System.out.println(listParticule.size());
 		}
 	}
 

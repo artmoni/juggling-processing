@@ -34,8 +34,8 @@ public abstract class ObjectToDisplay {
 		this.pVector.add(speed);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		parent.sphere(size);
-//		 parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x,
-//		 this.pVector.y, this.pVector.y);
+		// parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x,
+		// this.pVector.y, this.pVector.y);
 		pShape = getShape();
 		parent.shape(pShape);
 		parent.popMatrix();
@@ -58,7 +58,12 @@ public abstract class ObjectToDisplay {
 		}
 		if (vector.y > (parent.displayHeight - size * 2) || vector.y < size * 2) {
 			return true;
-		} else
+		}
+		if (vector.z > 0) {
+//			System.out.println("Collision");
+			return true;
+		}
+		else
 			return false;
 	}
 

@@ -36,7 +36,7 @@ public class Juggling extends PApplet {
 	SampleData simpleData = new SampleData();
 	String buffer;
 
-	FeuxDArtificesControleur feuControlleur;
+//	FeuxDArtificesControleur feuControlleur;
 
 	Timer timer = new Timer();
 	int back = 0;
@@ -80,18 +80,18 @@ public class Juggling extends PApplet {
 			simpleData.openFile();
 		}
 		background(0);
-		feuControlleur = new FeuxDArtificesControleur(this);
+//		feuControlleur = new FeuxDArtificesControleur(this);
 
 	}
 
 	public void draw() {
-		 timer.schedule(new MonAction(), 0, 1*1000);
+		 timer.schedule(new MonAction(), 1000);
 
 		if (spheres.size() > 0)
 			background(back);
 
 		if (myport != null) {
-			// With the Arduino You need to init the port
+			// With the Arduino You need to init the port55
 			buffer = myport.readStringUntil('\n');
 		} else {
 			// With the programme to read data on a txt file
@@ -151,8 +151,8 @@ public class Juggling extends PApplet {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		feuControlleur.addFeu(new PVector(displayWidth / 2, displayHeight / 2, 50));
-		feuControlleur.display();
+//		feuControlleur.addFeu(new PVector(displayWidth / 2, displayHeight / 2, 50));
+//		feuControlleur.display();
 		delay(100);
 	}
 
@@ -218,12 +218,12 @@ public class Juggling extends PApplet {
 	}
 	// }
 
-	public void mousePressed() {
-		if (mousePressed) {
-			System.out.println("CLIC");
-			feuControlleur.addFeu(new PVector(mouseX, mouseY));
-		}
-	}
+//	public void mousePressed() {
+//		if (mousePressed) {
+//			System.out.println("CLIC");
+//			feuControlleur.addFeu(new PVector(mouseX, mouseY));
+//		}
+//	}
 
 	public void updateSphereValue(ObjectToDisplay sphere, PVector gyroVector, PVector speedVector) {
 		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
@@ -257,22 +257,18 @@ public class Juggling extends PApplet {
 	}
 
 	public void retrieveData() {
-		  JSONObject json = loadJSONObject("http://127.0.0.1:8000/scene/1");
+		  JSONObject json = loadJSONObject("http://127.0.0.1:8000/scenes/last");
 		  back = json.getInt("background");
 		}
 
 
 class MonAction extends TimerTask {
-    int nbrRepetitions = 20;
+
 
     public void run() {
-      if (nbrRepetitions > 0) {
     	 retrieveData();
-        nbrRepetitions--;
-      } else {
         System.out.println("Terminé!");
-        timer.cancel();
         }
       }
     }
-}
+

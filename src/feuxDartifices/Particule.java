@@ -1,4 +1,5 @@
 package feuxDartifices;
+
 import processing.core.PApplet;
 import processing.core.PShape;
 import processing.core.PVector;

@@ -12,7 +12,7 @@ class Sphere extends ObjectToDisplay {
 		size = 30;
 	}
 
-	Sphere(int d, String id, PVector pvector,PVector speed, PApplet parent, int color) {
+	Sphere(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
 		size = d;
 		this.id = id;
 		this.pVector = pvector;
@@ -109,7 +109,7 @@ class Sphere extends ObjectToDisplay {
 		Sphere ballA = this;
 		for (int j = 0; j < spheres.size(); j++) {
 			Sphere ballB = (Sphere) spheres.get(j);
-			if (ballA.getId()!=ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size)*2) {
+			if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size) * 2) {
 				// bounce(ballA, ballB);
 				return ballB;
 			}

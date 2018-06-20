@@ -14,7 +14,6 @@ public class ParticuleCarre extends Particule  {
 	
 	@Override
 	protected PShape getShape() {
-		
 		return parent.createShape(PApplet.RECT, pVector.x, pVector.y, size, size);
 	}
 
