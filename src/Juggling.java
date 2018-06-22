@@ -23,7 +23,7 @@ public class Juggling extends PApplet {
 	// Firewor fire;
 	// PVector[] lim = new PVector[2];
 
-	ArrayList<Sphere> spheres = new ArrayList<Sphere>();
+	ArrayList<ObjectToDisplay> spheres = new ArrayList<ObjectToDisplay>();
 
 	boolean test = false;
 
@@ -36,7 +36,7 @@ public class Juggling extends PApplet {
 	SampleData simpleData = new SampleData();
 	String buffer;
 
-//	FeuxDArtificesControleur feuControlleur;
+	// FeuxDArtificesControleur feuControlleur;
 
 	Timer timer = new Timer();
 	int back = 0;
@@ -80,12 +80,17 @@ public class Juggling extends PApplet {
 			simpleData.openFile();
 		}
 		background(0);
-//		feuControlleur = new FeuxDArtificesControleur(this);
+		// feuControlleur = new FeuxDArtificesControleur(this);
 
 	}
 
 	public void draw() {
-		 timer.schedule(new MonAction(), 1000);
+		try {
+			timer.schedule(new MonAction(), 1000);
+		} catch (Exception e) {
+			timer.cancel();
+			back = 255;
+		}
 
 		if (spheres.size() > 0)
 			background(back);
@@ -116,10 +121,10 @@ public class Juggling extends PApplet {
 				// tan(PI) * width, 0, 1, 0);
 			}
 
-			for (Sphere mySphere : spheres) {
+			for (ObjectToDisplay mySphere : spheres) {
 				// checkcollision(mySphere);
 
-				Sphere collision = mySphere.collision(spheres);
+				ObjectToDisplay collision = mySphere.collision(spheres);
 				if (collision instanceof Sphere) {
 					PVector ab = new PVector();
 					ab.set(mySphere.pVector);
@@ -151,8 +156,8 @@ public class Juggling extends PApplet {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-//		feuControlleur.addFeu(new PVector(displayWidth / 2, displayHeight / 2, 50));
-//		feuControlleur.display();
+		// feuControlleur.addFeu(new PVector(displayWidth / 2, displayHeight / 2, 50));
+		// feuControlleur.display();
 		delay(100);
 	}
 
@@ -166,7 +171,7 @@ public class Juggling extends PApplet {
 				break;
 			}
 		}
-		if (!(currentSphere instanceof Sphere)) {
+		if (!(currentSphere instanceof ObjectToDisplay)) {
 			PVector vector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 			PVector speed = null;
 			Random random = new Random();
@@ -174,9 +179,12 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			Sphere sphere = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
-			spheres.add(sphere);
-			currentSphere = sphere;
+			Sphere form = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
+//			Cube form = new Cube(SPHERE_SIZE, id, vector, speed, this, color);
+//			Cylinder form = new Cylinder();
+			spheres.add(form);
+			currentSphere = form;
+			
 		}
 
 		return currentSphere;
@@ -218,12 +226,12 @@ public class Juggling extends PApplet {
 	}
 	// }
 
-//	public void mousePressed() {
-//		if (mousePressed) {
-//			System.out.println("CLIC");
-//			feuControlleur.addFeu(new PVector(mouseX, mouseY));
-//		}
-//	}
+	// public void mousePressed() {
+	// if (mousePressed) {
+	// System.out.println("CLIC");
+	// feuControlleur.addFeu(new PVector(mouseX, mouseY));
+	// }
+	// }
 
 	public void updateSphereValue(ObjectToDisplay sphere, PVector gyroVector, PVector speedVector) {
 		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
@@ -257,18 +265,15 @@ public class Juggling extends PApplet {
 	}
 
 	public void retrieveData() {
-		  JSONObject json = loadJSONObject("http://127.0.0.1:8000/scenes/last");
-		  back = json.getInt("background");
+		JSONObject json = loadJSONObject("http://127.0.0.1:8000/scenes/last");
+		back = json.getInt("background");
+	}
+
+	class MonAction extends TimerTask {
+
+		public void run() {
+			retrieveData();
+			System.out.println("Terminé!");
 		}
-
-
-class MonAction extends TimerTask {
-
-
-    public void run() {
-    	 retrieveData();
-        System.out.println("Terminé!");
-        }
-      }
-    }
-
+	}
+}
