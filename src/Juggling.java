@@ -86,7 +86,7 @@ public class Juggling extends PApplet {
 
 	public void draw() {
 		try {
-			timer.schedule(new TimerAction(), 1000);
+			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
 			back = 255;
@@ -269,7 +269,7 @@ public class Juggling extends PApplet {
 		back = json.getInt("background");
 	}
 
-	class TimerAction extends TimerTask {
+	class SynchroServerAction extends TimerTask {
 
 		public void run() {
 			dataFromServer();
