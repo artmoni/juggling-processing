@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import processing.core.*;
 
 public abstract class ObjectToDisplay {
@@ -33,7 +35,7 @@ public abstract class ObjectToDisplay {
 
 		this.pVector.add(speed);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
-		parent.sphere(size);
+//		parent.sphere(size);
 		// parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x,
 		// this.pVector.y, this.pVector.y);
 		pShape = getShape();
@@ -89,6 +91,18 @@ public abstract class ObjectToDisplay {
 
 	protected void setSpeed(PVector vector) {
 		this.speed = vector;
+	}
+	
+	public ObjectToDisplay collision(ArrayList<ObjectToDisplay> spheres) {
+		ObjectToDisplay ballA = this;
+		for (int j = 0; j < spheres.size(); j++) {
+			ObjectToDisplay ballB = (Sphere) spheres.get(j);
+			if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size) * 2) {
+				// bounce(ballA, ballB);
+				return ballB;
+			}
+		}
+		return null;
 	}
 
 	protected abstract PShape getShape();
