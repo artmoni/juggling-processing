@@ -86,7 +86,7 @@ public class Juggling extends PApplet {
 
 	public void draw() {
 		try {
-			timer.schedule(new MonAction(), 1000);
+			timer.schedule(new TimerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
 			back = 255;
@@ -264,15 +264,15 @@ public class Juggling extends PApplet {
 		sphere.setSpeed(speedVector);
 	}
 
-	public void retrieveData() {
+	public void dataFromServer() {
 		JSONObject json = loadJSONObject("http://127.0.0.1:8000/scenes/last");
 		back = json.getInt("background");
 	}
 
-	class MonAction extends TimerTask {
+	class TimerAction extends TimerTask {
 
 		public void run() {
-			retrieveData();
+			dataFromServer();
 			System.out.println("Terminé!");
 		}
 	}
