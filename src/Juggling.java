@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import feuxDartifices.*;
-import processing.core.*;
+import processing.core.PApplet;
+import processing.core.PVector;
 import processing.data.JSONObject;
 import processing.serial.Serial;
 
@@ -35,6 +35,8 @@ public class Juggling extends PApplet {
 
 	SampleData simpleData = new SampleData();
 	String buffer;
+	
+	String url = "http://127.0.0.1:8000/scenes/last";
 
 	// FeuxDArtificesControleur feuControlleur;
 
@@ -62,7 +64,7 @@ public class Juggling extends PApplet {
 
 		spheres.clear();
 
-		thread("retrieveData");
+//		thread("retrieveDataFromServer");
 
 		// lim[0] = new PVector(-750, -1);
 		// lim[1] = new PVector(750, 1000);
@@ -163,15 +165,15 @@ public class Juggling extends PApplet {
 
 	public ObjectToDisplay createSphereIfNotExist(String id) {
 
-		ObjectToDisplay currentSphere = null;
+		ObjectToDisplay currentObj = null;
 
 		for (ObjectToDisplay maSphere : spheres) {
 			if (maSphere.getId().equals(id)) {
-				currentSphere = maSphere;
+				currentObj = maSphere;
 				break;
 			}
 		}
-		if (!(currentSphere instanceof ObjectToDisplay)) {
+		if (!(currentObj instanceof ObjectToDisplay)) {
 			PVector vector = new PVector(defaultValueX, defaultValueY, defaultValueZ);
 			PVector speed = null;
 			Random random = new Random();
@@ -179,15 +181,16 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			Sphere form = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
-//			Cube form = new Cube(SPHERE_SIZE, id, vector, speed, this, color);
-//			Cylinder form = new Cylinder();
+//			ObjectToDisplay form = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
+//			ObjectToDisplay form = new Sphere2(SPHERE_SIZE, id, vector, speed, this, color);
+			ObjectToDisplay form = new Cube(SPHERE_SIZE, id, vector, speed, this, color);
+//			ObjectToDisplay form = new Cylinder(this);
 			spheres.add(form);
-			currentSphere = form;
+			currentObj = form;
 			
 		}
 
-		return currentSphere;
+		return currentObj;
 
 	}
 
@@ -264,15 +267,15 @@ public class Juggling extends PApplet {
 		sphere.setSpeed(speedVector);
 	}
 
-	public void dataFromServer() {
-		JSONObject json = loadJSONObject("http://127.0.0.1:8000/scenes/last");
+	public void retrieveDataFromServer() {
+		JSONObject json = loadJSONObject(url);
 		back = json.getInt("background");
 	}
 
 	class SynchroServerAction extends TimerTask {
 
 		public void run() {
-			dataFromServer();
+			retrieveDataFromServer();
 			System.out.println("Terminé!");
 		}
 	}

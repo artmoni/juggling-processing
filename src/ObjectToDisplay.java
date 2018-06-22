@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 import processing.core.*;
 
@@ -25,6 +26,15 @@ public abstract class ObjectToDisplay {
 			"img/planet_miranda.jpg", "img/texture_adidas.jpg", "img/texture_foot.jpg", "img/texture_football.png",
 			"img/texture_strawberry.jpg", };
 	protected PShape pShape;
+	
+	public ObjectToDisplay(PApplet parent) {
+		this.parent=parent;
+		this.id = String.valueOf(new Random().nextInt(65000));
+		this.pVector = new PVector(parent.width/2, parent.height/2, 0);
+		this.speed = new PVector(0,0);
+		this.ptsW = 30;
+		this.ptsH = 30;
+	}
 
 	protected void display() {
 
@@ -35,7 +45,7 @@ public abstract class ObjectToDisplay {
 
 		this.pVector.add(speed);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
-//		parent.sphere(size);
+		// parent.sphere(size);
 		// parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x,
 		// this.pVector.y, this.pVector.y);
 		pShape = getShape();
@@ -62,10 +72,9 @@ public abstract class ObjectToDisplay {
 			return true;
 		}
 		if (vector.z > 0) {
-//			System.out.println("Collision");
+			// System.out.println("Collision");
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
 
@@ -92,11 +101,11 @@ public abstract class ObjectToDisplay {
 	protected void setSpeed(PVector vector) {
 		this.speed = vector;
 	}
-	
-	public ObjectToDisplay collision(ArrayList<ObjectToDisplay> spheres) {
+
+	public ObjectToDisplay collision(ArrayList<ObjectToDisplay> objects) {
 		ObjectToDisplay ballA = this;
-		for (int j = 0; j < spheres.size(); j++) {
-			ObjectToDisplay ballB = (Sphere) spheres.get(j);
+		for (int j = 0; j < objects.size(); j++) {
+			ObjectToDisplay ballB = objects.get(j);
 			if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size) * 2) {
 				// bounce(ballA, ballB);
 				return ballB;

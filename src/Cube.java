@@ -1,5 +1,4 @@
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import processing.core.PApplet;
@@ -8,34 +7,26 @@ import processing.core.PShape;
 import processing.core.PVector;
 
 class Cube extends ObjectToDisplay {
-	
-	Cube() {
-		size = 30;
-	}
 
 	Cube(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
+		super(parent);
 		size = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;
-		this.parent = parent;
 		this.color = color;
 		this.ptsW = 30;
 		this.ptsH = 30;
-		initializeSphere(ptsW, ptsH);
+		initializeCube(ptsW, ptsH);
 		img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
-		// img = parent.loadImage("img/texture_strawberry.jpg");
-		// img = parent.loadImage("img/texture_strawberry.jpg");
-		// img = parent.loadImage("img/texture_strawberry.jpg");
-		// img = parent.loadImage("img/texture_strawberry.jpg");
 
 	}
 
 	protected PShape getShape() {
-		return textureSphere(200, 200, 200, img);
+		return textureCube(200, 200, 200, img);
 	}
 
-	void initializeSphere(int numPtsW, int numPtsH_2pi) {
+	void initializeCube(int numPtsW, int numPtsH_2pi) {
 
 		// The number of points around the width and height
 		numPointsW = numPtsW + 1;
@@ -75,119 +66,125 @@ class Cube extends ObjectToDisplay {
 		}
 	}
 
-	PShape textureSphere(float rx, float ry, float rz, PImage t) {
+	PShape textureCube(float rx, float ry, float rz, PImage t) {
 		// These are so we can map certain parts of the image on to the shape
-		float changeU = t.width / (float) (numPointsW - 1);
-		float changeV = t.height / (float) (numPointsH - 1);
-		float u = 0; // Width variable for the texture
-		float v = 0; // Height variable for the texture
-		PShape ps = parent.createShape();
-		ps.beginShape(PApplet.TRIANGLE_STRIP);
-		ps.texture(t);
-		for (int i = 0; i < (numPointsH - 1); i++) { // For all the rings but top and bottom
-			// Goes into the array here instead of loop to save time
-			float coory = coorY[i];
-			float cooryPlus = coorY[i + 1];
+		PShape cube;
+		cube = parent.createShape();
+		cube.beginShape(PApplet.QUAD);
+		// cube.textureMode(PApplet.NORMAL);
+//		 cube.texture(img);
+		cube.vertex(pVector.x, pVector.y, pVector.z, 0, 1);
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z, 1, 1);
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z, 1, 0);
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z, 0, 0);
 
-			float multxz = multXZ[i];
-			float multxzPlus = multXZ[i + 1];
+		cube.vertex(pVector.x, pVector.y, pVector.z);
+		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z);
 
-			for (int j = 0; j < numPointsW; j++) { // For all the pts in the ring
-				ps.normal(-coorX[j] * multxz, -coory, -coorZ[j] * multxz);
-				ps.vertex(coorX[j] * multxz * rx, coory * ry, coorZ[j] * multxz * rz, u, v);
-				ps.normal(-coorX[j] * multxzPlus, -cooryPlus, -coorZ[j] * multxzPlus);
-				ps.vertex(coorX[j] * multxzPlus * rx, cooryPlus * ry, coorZ[j] * multxzPlus * rz, u, v + changeV);
-				u += changeU;
-			}
-			v += changeV;
-			u = 0;
-		}
-		ps.endShape();
-		return ps;
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z);
+
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		cube.vertex(pVector.x - 100, pVector.y, pVector.z);
+		cube.vertex(pVector.x, pVector.y, pVector.z);
+		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		cube.vertex(pVector.x, pVector.y - 100, pVector.z);
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
+		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		cube.endShape(PApplet.CLOSE);
+		return cube;
 	}
 
-//	public Sphere collision(ArrayList<Sphere> spheres) {
-//		Sphere ballA = this;
-//		for (int j = 0; j < spheres.size(); j++) {
-//			Sphere ballB = (Sphere) spheres.get(j);
-//			if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size) * 2) {
-//				// bounce(ballA, ballB);
-//				return ballB;
-//			}
-//		}
-//		return null;
-//	}
+	// public Sphere collision(ArrayList<Sphere> spheres) {
+	// Sphere ballA = this;
+	// for (int j = 0; j < spheres.size(); j++) {
+	// Sphere ballB = (Sphere) spheres.get(j);
+	// if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) <
+	// (ballA.size + ballB.size) * 2) {
+	// // bounce(ballA, ballB);
+	// return ballB;
+	// }
+	// }
+	// return null;
+	// }
 }
 
-
-
-
-
-
-//import java.util.ArrayList;
-//import java.util.Random;
+// import java.util.ArrayList;
+// import java.util.Random;
 //
-//import processing.core.PApplet;
-//import processing.core.PImage;
-//import processing.core.PShape;
-//import processing.core.PVector;
+// import processing.core.PApplet;
+// import processing.core.PImage;
+// import processing.core.PShape;
+// import processing.core.PVector;
 //
-//public class Cube extends ObjectToDisplay {
-//	
-//	Cube(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
-//		size = d;
-//		this.id = id;
-//		this.pVector = pvector;
-//		this.speed = speed;
-//		this.parent = parent;
-//		this.color = color;
-//		img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
-////		// img = parent.loadImage("img/texture_strawberry.jpg");
-////		// img = parent.loadImage("img/texture_strawberry.jpg");
-////		// img = parent.loadImage("img/texture_strawberry.jpg");
-////		// img = parent.loadImage("img/texture_strawberry.jpg");
-//		
+// public class Cube extends ObjectToDisplay {
 //
-//	}
+// Cube(int d, String id, PVector pvector, PVector speed, PApplet parent, int
+// color) {
+// size = d;
+// this.id = id;
+// this.pVector = pvector;
+// this.speed = speed;
+// this.parent = parent;
+// this.color = color;
+// img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
+//// // img = parent.loadImage("img/texture_strawberry.jpg");
+//// // img = parent.loadImage("img/texture_strawberry.jpg");
+//// // img = parent.loadImage("img/texture_strawberry.jpg");
+//// // img = parent.loadImage("img/texture_strawberry.jpg");
 //
-//	@Override
-//	protected PShape getShape() {
-//		PShape cube;
-//		cube = parent.createShape();
-//		  cube.beginShape(PApplet.QUAD);
-////		  cube.textureMode(PApplet.NORMAL);
-////		  cube.texture(img);
-//		  cube.vertex(pVector.x, pVector.y, pVector.z,0,1);
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z,1,1);
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z,1,0);
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z,0,0);
-//		 
-//		  cube.vertex(pVector.x, pVector.y, pVector.z);
-//		  cube.vertex(pVector.x, pVector.y, pVector.z-100);
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z);
-//		 
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z);
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z);
-//		 
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
-//		  cube.vertex(pVector.x, pVector.y, pVector.z-100);
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
-//		 
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
-//		  cube.vertex(pVector.x-100, pVector.y, pVector.z);
-//		  cube.vertex(pVector.x, pVector.y, pVector.z);
-//		  cube.vertex(pVector.x, pVector.y, pVector.z-100);
-//		 
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
-//		  cube.vertex(pVector.x, pVector.y-100, pVector.z);
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z);
-//		  cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
-//		  cube.endShape(PApplet.CLOSE);
-//		return cube;
-//	}
 //
-//}
+// }
+//
+// @Override
+// protected PShape getShape() {
+// PShape cube;
+// cube = parent.createShape();
+// cube.beginShape(PApplet.QUAD);
+//// cube.textureMode(PApplet.NORMAL);
+//// cube.texture(img);
+// cube.vertex(pVector.x, pVector.y, pVector.z,0,1);
+// cube.vertex(pVector.x, pVector.y-100, pVector.z,1,1);
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z,1,0);
+// cube.vertex(pVector.x-100, pVector.y, pVector.z,0,0);
+//
+// cube.vertex(pVector.x, pVector.y, pVector.z);
+// cube.vertex(pVector.x, pVector.y, pVector.z-100);
+// cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
+// cube.vertex(pVector.x, pVector.y-100, pVector.z);
+//
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z);
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
+// cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
+// cube.vertex(pVector.x-100, pVector.y, pVector.z);
+//
+// cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
+// cube.vertex(pVector.x, pVector.y, pVector.z-100);
+// cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
+//
+// cube.vertex(pVector.x-100, pVector.y, pVector.z-100);
+// cube.vertex(pVector.x-100, pVector.y, pVector.z);
+// cube.vertex(pVector.x, pVector.y, pVector.z);
+// cube.vertex(pVector.x, pVector.y, pVector.z-100);
+//
+// cube.vertex(pVector.x, pVector.y-100, pVector.z-100);
+// cube.vertex(pVector.x, pVector.y-100, pVector.z);
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z);
+// cube.vertex(pVector.x-100, pVector.y-100, pVector.z-100);
+// cube.endShape(PApplet.CLOSE);
+// return cube;
+// }
+//
+// }

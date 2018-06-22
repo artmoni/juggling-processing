@@ -8,16 +8,13 @@ import processing.core.PShape;
 import processing.core.PVector;
 
 class Sphere extends ObjectToDisplay {
-	Sphere() {
-		size = 30;
-	}
 
 	Sphere(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
+		super(parent);
 		size = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;
-		this.parent = parent;
 		this.color = color;
 		this.ptsW = 30;
 		this.ptsH = 30;
