@@ -36,7 +36,7 @@ public class Juggling extends PApplet {
 	SampleData simpleData = new SampleData();
 	String buffer;
 	
-	String url = "http://127.0.0.1:8000/scenes/last";
+	String url = "http://127.0.0.1:8000/scenes/current";
 
 	// FeuxDArtificesControleur feuControlleur;
 
