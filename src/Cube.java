@@ -10,7 +10,7 @@ class Cube extends ObjectToDisplay {
 
 	Cube(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
 		super(parent);
-		size = d;
+//		SIZE = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;
@@ -30,7 +30,7 @@ class Cube extends ObjectToDisplay {
 
 		// The number of points around the width and height
 		numPointsW = numPtsW + 1;
-		numPointsH_2pi = numPtsH_2pi; // How many actual pts around the sphere (not just from top to bottom)
+		numPointsH_2pi = numPtsH_2pi; // How many actual pts around the cube (not just from top to bottom)
 		numPointsH = PApplet.ceil((float) numPointsH_2pi / 2) + 1; // How many pts from top to bottom (abs(....) b/c of
 																	// the possibility of an odd numPointsH_2pi)
 
@@ -106,18 +106,6 @@ class Cube extends ObjectToDisplay {
 		return cube;
 	}
 
-	// public Sphere collision(ArrayList<Sphere> spheres) {
-	// Sphere ballA = this;
-	// for (int j = 0; j < spheres.size(); j++) {
-	// Sphere ballB = (Sphere) spheres.get(j);
-	// if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) <
-	// (ballA.size + ballB.size) * 2) {
-	// // bounce(ballA, ballB);
-	// return ballB;
-	// }
-	// }
-	// return null;
-	// }
 }
 
 // import java.util.ArrayList;

@@ -11,7 +11,7 @@ class Sphere extends ObjectToDisplay {
 
 	Sphere(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
 		super(parent);
-		size = d;
+//		SIZE = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;

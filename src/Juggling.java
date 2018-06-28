@@ -90,6 +90,8 @@ public class Juggling extends PApplet {
 	}
 
 	public void draw() {
+
+		// box(width, height, 600);
 		try {
 			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
@@ -126,7 +128,7 @@ public class Juggling extends PApplet {
 			}
 
 			for (ObjectToDisplay myObject : objects) {
-				// checkcollision(myObject);
+				// checkcollisionScreenEdge(myObject);
 
 				ObjectToDisplay collision = myObject.collision(objects);
 				if (collision instanceof ObjectToDisplay) {
@@ -145,12 +147,15 @@ public class Juggling extends PApplet {
 
 					u.sub(un);
 					myObject.setVector(myObject.getPVector().sub(u));
+
 					// myObject.speed = PVector.add(u, collision.speed);
 					// collision.speed = PVector.add(un, collision.speed);
 					// myObject.setVector(myObject.getPVector().copy().mult(-1));
 					myObject.display();
 					println("collision with " + collision.getId());
 
+					Pulse pulse = new Pulse(50, 50, this);
+					pulse.display();
 				} else {
 					myObject.display();
 					myObject.displayCoord();
@@ -183,9 +188,8 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			// ObjectToDisplay form = new Sphere(OBJECT_SIZE, id, vector, speed, this,
-			// color);
-			ObjectToDisplay form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
+			ObjectToDisplay form = new Sphere(OBJECT_SIZE, id, vector, speed, this, color);
+			// ObjectToDisplay form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
 			// ObjectToDisplay form = new Cylinder(OBJECT_SIZE, id, vector, speed, this,
 			// color);
 			objects.add(form);
@@ -197,10 +201,14 @@ public class Juggling extends PApplet {
 
 	}
 
-	public void checkcollision(ObjectToDisplay object) {
-		if (object.checkCollision(object.getPVector(),object.getVitesse())) {
+	public void checkcollisionScreenEdge(ObjectToDisplay object) {
+		if (object.checkCollision(object.getPVector(), object.getVitesse())) {
 			System.out.println("collision bord");
-			// Pulse pulse = new Pulse(defaultValueX, defaultValueY);
+
+			Pulse pulse = new Pulse(50, 50, this);
+			pulse.display();
+
+			// Pulse pulse = new Pulse(defaultValueX, defaultValueY, this);
 			// pulse.display();
 			// float theta[]={0.0, 0.0, 0.0};
 			// float m = x;
@@ -218,8 +226,12 @@ public class Juggling extends PApplet {
 			// v[j]=new Vague(theta[j], j, m, my);
 			// v[j].display(m, my);
 			// }
-			// PVector pVector = new PVector(lastxtmp,lastytmp,lastztmp);
+
+			// PVector pVectorSpeed = new PVector(0, 0, 0);
+			// PVector pVector = new PVector(lastxtmp, lastytmp, lastztmp);
+			// object.setSpeed(pVectorSpeed);
 			// object.setVector(pVector);
+
 			// object.display();
 			// } else {
 			// firewors.clear();

@@ -7,7 +7,8 @@ public abstract class ObjectToDisplay {
 
 	protected PApplet parent;
 
-	protected int size;
+	protected int SIZE = 50;
+
 	protected String id;
 	protected PVector pVector;
 	protected PVector speed;
@@ -26,12 +27,12 @@ public abstract class ObjectToDisplay {
 			"img/planet_miranda.jpg", "img/texture_adidas.jpg", "img/texture_foot.jpg", "img/texture_football.png",
 			"img/texture_strawberry.jpg", };
 	protected PShape pShape;
-	
+
 	public ObjectToDisplay(PApplet parent) {
-		this.parent=parent;
+		this.parent = parent;
 		this.id = String.valueOf(new Random().nextInt(65000));
-		this.pVector = new PVector(parent.width/2, parent.height/2, 0);
-		this.speed = new PVector(0,0);
+		this.pVector = new PVector(parent.width / 2, parent.height / 2, 0);
+		this.speed = new PVector(0, 0);
 		this.ptsW = 30;
 		this.ptsH = 30;
 	}
@@ -57,25 +58,11 @@ public abstract class ObjectToDisplay {
 	protected void displayCoord() {
 		parent.textSize(20);
 		parent.fill(color);
-		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * size, this.pVector.y, this.pVector.z);
-		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * size, this.pVector.y + 20, this.pVector.z);
-		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * size, this.pVector.y + 40, this.pVector.z);
-		parent.text("ID = " + this.getId(), this.pVector.x - 3 * size, this.pVector.y + 60, this.pVector.z);
-		parent.text("vitesse = " + this.getVitesse(), this.pVector.x - 3 * size, this.pVector.y + 80, this.pVector.z);
-	}
-
-	boolean checkCollision(PVector vector) {
-		if (vector.x > (parent.displayWidth - size * 2) || vector.x < size * 2) {
-			return true;
-		}
-		if (vector.y > (parent.displayHeight - size * 2) || vector.y < size * 2) {
-			return true;
-		}
-		if (vector.z > 0) {
-			// System.out.println("Collision");
-			return true;
-		} else
-			return false;
+		parent.text("x = " + this.getPVector().x, this.pVector.x - 3 * SIZE, this.pVector.y, this.pVector.z);
+		parent.text("y = " + this.getPVector().y, this.pVector.x - 3 * SIZE, this.pVector.y + 20, this.pVector.z);
+		parent.text("z = " + this.getPVector().z, this.pVector.x - 3 * SIZE, this.pVector.y + 40, this.pVector.z);
+		parent.text("ID = " + this.getId(), this.pVector.x - 3 * SIZE, this.pVector.y + 60, this.pVector.z);
+		parent.text("vitesse = " + this.getVitesse(), this.pVector.x - 3 * SIZE, this.pVector.y + 80, this.pVector.z);
 	}
 
 	protected String getId() {
@@ -83,7 +70,7 @@ public abstract class ObjectToDisplay {
 	}
 
 	protected float getSize() {
-		return this.size;
+		return this.SIZE;
 	}
 
 	protected PVector getPVector() {
@@ -103,15 +90,34 @@ public abstract class ObjectToDisplay {
 	}
 
 	public ObjectToDisplay collision(ArrayList<ObjectToDisplay> objects) {
-		ObjectToDisplay ballA = this;
+		ObjectToDisplay objA = this;
 		for (int j = 0; j < objects.size(); j++) {
-			ObjectToDisplay ballB = objects.get(j);
-			if (ballA.getId() != ballB.getId() && ballA.pVector.dist(ballB.pVector) < (ballA.size + ballB.size) * 2) {
+			ObjectToDisplay objB = objects.get(j);
+			if (objA.getId() != objB.getId() && objA.pVector.dist(objB.pVector) < (objA.SIZE + objB.SIZE) * 2) {
 				// bounce(ballA, ballB);
-				return ballB;
+				return objB;
 			}
 		}
 		return null;
+	}
+
+	public boolean checkCollision(PVector _location, PVector speed) {
+		PVector location = _location.copy();
+		location.add(speed);
+		if (location.x > (parent.width - SIZE * 2) || location.x < SIZE * 2) {
+			System.out.println("Collision X");
+			return true;
+		}
+		if (location.y > (parent.height) || location.y < SIZE * 2) {
+			System.out.println("Collision Y");
+			System.out.println("Y = " + location.y);
+			System.out.println("SIZE Y = " + parent.height);
+			return true;
+		}
+		// if (vector.z > 0) {
+		// return true;
+		// } else
+		return false;
 	}
 
 	protected abstract PShape getShape();
