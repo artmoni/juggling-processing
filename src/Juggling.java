@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,6 +15,8 @@ public class Juggling extends PApplet {
 	int SPHERE_SIZE = 50;
 
 	Serial myport;
+
+	HashMap<String, String> configFromServer = new HashMap<String, String>();
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
@@ -35,13 +38,12 @@ public class Juggling extends PApplet {
 
 	SampleData simpleData = new SampleData();
 	String buffer;
-	
+
 	String url = "http://127.0.0.1:8000/scenes/current";
 
 	// FeuxDArtificesControleur feuControlleur;
 
 	Timer timer = new Timer();
-	int back = 0;
 
 	public static void main(String[] args) {
 
@@ -64,7 +66,9 @@ public class Juggling extends PApplet {
 
 		spheres.clear();
 
-//		thread("retrieveDataFromServer");
+		this.configFromServer.put("background", "70");
+
+		// thread("retrieveDataFromServer");
 
 		// lim[0] = new PVector(-750, -1);
 		// lim[1] = new PVector(750, 1000);
@@ -81,7 +85,6 @@ public class Juggling extends PApplet {
 		} catch (Exception e) {
 			simpleData.openFile();
 		}
-		background(0);
 		// feuControlleur = new FeuxDArtificesControleur(this);
 
 	}
@@ -91,11 +94,10 @@ public class Juggling extends PApplet {
 			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
-			back = 255;
 		}
 
 		if (spheres.size() > 0)
-			background(back);
+			background(parseInt(this.configFromServer.get("background")));
 
 		if (myport != null) {
 			// With the Arduino You need to init the port55
@@ -181,13 +183,15 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-//			ObjectToDisplay form = new Sphere(SPHERE_SIZE, id, vector, speed, this, color);
-//			ObjectToDisplay form = new Sphere2(SPHERE_SIZE, id, vector, speed, this, color);
+			// ObjectToDisplay form = new Sphere(SPHERE_SIZE, id, vector, speed, this,
+			// color);
+			// ObjectToDisplay form = new Sphere2(SPHERE_SIZE, id, vector, speed, this,
+			// color);
 			ObjectToDisplay form = new Cube(SPHERE_SIZE, id, vector, speed, this, color);
-//			ObjectToDisplay form = new Cylinder(this);
+			// ObjectToDisplay form = new Cylinder(this);
 			spheres.add(form);
 			currentObj = form;
-			
+
 		}
 
 		return currentObj;
@@ -269,14 +273,15 @@ public class Juggling extends PApplet {
 
 	public void retrieveDataFromServer() {
 		JSONObject json = loadJSONObject(url);
-		back = json.getInt("background");
+		this.configFromServer.put("background", "" + json.getInt("background"));
+		// back = json.getInt("background");
 	}
 
 	class SynchroServerAction extends TimerTask {
 
 		public void run() {
 			retrieveDataFromServer();
-			System.out.println("Terminé!");
+			// System.out.println("Terminé!");
 		}
 	}
 }
