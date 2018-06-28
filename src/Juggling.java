@@ -12,7 +12,7 @@ import processing.serial.Serial;
 
 public class Juggling extends PApplet {
 	int MIN_Z = 30, MAX_Z = 200;
-	int SPHERE_SIZE = 50;
+	int OBJECT_SIZE = 50;
 
 	Serial myport;
 
@@ -26,7 +26,7 @@ public class Juggling extends PApplet {
 	// Firewor fire;
 	// PVector[] lim = new PVector[2];
 
-	ArrayList<ObjectToDisplay> spheres = new ArrayList<ObjectToDisplay>();
+	ArrayList<ObjectToDisplay> objects = new ArrayList<ObjectToDisplay>();
 
 	boolean test = false;
 
@@ -64,7 +64,7 @@ public class Juggling extends PApplet {
 		// x = defaultValueX;
 		// y = defaultValueY;
 
-		spheres.clear();
+		objects.clear();
 
 		this.configFromServer.put("background", "70");
 
@@ -96,7 +96,7 @@ public class Juggling extends PApplet {
 			timer.cancel();
 		}
 
-		if (spheres.size() > 0)
+		if (objects.size() > 0)
 			background(parseInt(this.configFromServer.get("background")));
 
 		if (myport != null) {
@@ -114,46 +114,46 @@ public class Juggling extends PApplet {
 		try {
 			DataProtocole protocole = new DataProtocole(buffer);
 
-			ObjectToDisplay objectToDisplay = createSphereIfNotExist(protocole.getResourceId());
-			updateSphereValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
+			ObjectToDisplay objectToDisplay = createObjectIfNotExist(protocole.getResourceId());
+			updateObjectValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
 
-			if (spheres.size() > 1) {
-				PVector eye = spheres.get(0).getPVector();
-				PVector whattosee = spheres.get(1).getPVector();
+			if (objects.size() > 1) {
+				PVector eye = objects.get(0).getPVector();
+				PVector whattosee = objects.get(1).getPVector();
 				// camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
 				// camera(mouseX, height / 2, (height / 2) / tan(PI / 6), mouseX, height / 2,
 				// tan(PI) * width, 0, 1, 0);
 			}
 
-			for (ObjectToDisplay mySphere : spheres) {
-				// checkcollision(mySphere);
+			for (ObjectToDisplay myObject : objects) {
+				// checkcollision(myObject);
 
-				ObjectToDisplay collision = mySphere.collision(spheres);
-				if (collision instanceof Sphere) {
+				ObjectToDisplay collision = myObject.collision(objects);
+				if (collision instanceof ObjectToDisplay) {
 					PVector ab = new PVector();
-					ab.set(mySphere.pVector);
+					ab.set(myObject.pVector);
 					ab.sub(collision.pVector);
 					ab.normalize();
-					while (mySphere.pVector.dist(collision.pVector) < (mySphere.getSize() + collision.getSize()) * 4) {
+					while (myObject.pVector.dist(collision.pVector) < (myObject.getSize() + collision.getSize()) * 4) {
 						// *spring) {
-						mySphere.pVector.add(ab);
+						myObject.pVector.add(ab);
 					}
-					PVector n = PVector.sub(mySphere.pVector, collision.pVector);
+					PVector n = PVector.sub(myObject.pVector, collision.pVector);
 					n.normalize();
-					PVector u = PVector.sub(mySphere.pVector, collision.pVector);
+					PVector u = PVector.sub(myObject.pVector, collision.pVector);
 					PVector un = u.mult(n.dot(u));
 
 					u.sub(un);
-					mySphere.setVector(mySphere.getPVector().sub(u));
-					// mySphere.speed = PVector.add(u, collision.speed);
+					myObject.setVector(myObject.getPVector().sub(u));
+					// myObject.speed = PVector.add(u, collision.speed);
 					// collision.speed = PVector.add(un, collision.speed);
-					// mySphere.setVector(mySphere.getPVector().copy().mult(-1));
-					mySphere.display();
+					// myObject.setVector(myObject.getPVector().copy().mult(-1));
+					myObject.display();
 					println("collision with " + collision.getId());
 
 				} else {
-					mySphere.display();
-					mySphere.displayCoord();
+					myObject.display();
+					myObject.displayCoord();
 
 				}
 			}
@@ -165,13 +165,13 @@ public class Juggling extends PApplet {
 		delay(100);
 	}
 
-	public ObjectToDisplay createSphereIfNotExist(String id) {
+	public ObjectToDisplay createObjectIfNotExist(String id) {
 
 		ObjectToDisplay currentObj = null;
 
-		for (ObjectToDisplay maSphere : spheres) {
-			if (maSphere.getId().equals(id)) {
-				currentObj = maSphere;
+		for (ObjectToDisplay monObjet : objects) {
+			if (monObjet.getId().equals(id)) {
+				currentObj = monObjet;
 				break;
 			}
 		}
@@ -183,13 +183,12 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			// ObjectToDisplay form = new Sphere(SPHERE_SIZE, id, vector, speed, this,
+			// ObjectToDisplay form = new Sphere(OBJECT_SIZE, id, vector, speed, this,
 			// color);
-			// ObjectToDisplay form = new Sphere2(SPHERE_SIZE, id, vector, speed, this,
+			ObjectToDisplay form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
+			// ObjectToDisplay form = new Cylinder(OBJECT_SIZE, id, vector, speed, this,
 			// color);
-			ObjectToDisplay form = new Cube(SPHERE_SIZE, id, vector, speed, this, color);
-			// ObjectToDisplay form = new Cylinder(this);
-			spheres.add(form);
+			objects.add(form);
 			currentObj = form;
 
 		}
@@ -198,8 +197,9 @@ public class Juggling extends PApplet {
 
 	}
 
-	public void checkcollision(ObjectToDisplay sphere) {
-		if (sphere.checkCollision(sphere.getPVector())) {
+	public void checkcollision(ObjectToDisplay object) {
+		if (object.checkCollision(object.getPVector(),object.getVitesse())) {
+			System.out.println("collision bord");
 			// Pulse pulse = new Pulse(defaultValueX, defaultValueY);
 			// pulse.display();
 			// float theta[]={0.0, 0.0, 0.0};
@@ -219,11 +219,11 @@ public class Juggling extends PApplet {
 			// v[j].display(m, my);
 			// }
 			// PVector pVector = new PVector(lastxtmp,lastytmp,lastztmp);
-			// sphere.setVector(pVector);
-			// sphere.display();
+			// object.setVector(pVector);
+			// object.display();
 			// } else {
 			// firewors.clear();
-			// sphere.display();
+			// object.display();
 			// if (val[3] >= 3) {
 			// fire = new Firewor(4000, new PVector(0, 0), new PVector(0, 100), -1,
 			// color(200, 0, 50));
@@ -240,35 +240,35 @@ public class Juggling extends PApplet {
 	// }
 	// }
 
-	public void updateSphereValue(ObjectToDisplay sphere, PVector gyroVector, PVector speedVector) {
-		if (sphere.getPVector().x <= (displayWidth - SPHERE_SIZE * 2) && sphere.getPVector().x > SPHERE_SIZE * 2
-				&& sphere.getPVector().y < (displayHeight - SPHERE_SIZE * 2)
-				&& sphere.getPVector().y > SPHERE_SIZE * 2) {
+	public void updateObjectValue(ObjectToDisplay object, PVector gyroVector, PVector speedVector) {
+		if (object.getPVector().x <= (displayWidth - OBJECT_SIZE * 2) && object.getPVector().x > OBJECT_SIZE * 2
+				&& object.getPVector().y < (displayHeight - OBJECT_SIZE * 2)
+				&& object.getPVector().y > OBJECT_SIZE * 2) {
 
-			lastxtmp = sphere.getPVector().x;
-			lastytmp = sphere.getPVector().y;
+			lastxtmp = object.getPVector().x;
+			lastytmp = object.getPVector().y;
 		}
-		// PVector vtmp = new PVector(sphere.getPVector().x + (parseInt((round(val[1] *
+		// PVector vtmp = new PVector(object.getPVector().x + (parseInt((round(val[1] *
 		// 20)))),
-		// (sphere.getPVector().y - (parseInt(round(val[2] * 20)))),
-		// (sphere.getPVector().z + (parseInt(round(val[3] * 100)))));
+		// (object.getPVector().y - (parseInt(round(val[2] * 20)))),
+		// (object.getPVector().z + (parseInt(round(val[3] * 100)))));
 
-		PVector vtmp = sphere.getPVector().add(gyroVector);
+		PVector vtmp = object.getPVector().add(gyroVector);
 
-		float x = sphere.getPVector().x;
-		float y = sphere.getPVector().y;
-		float z = sphere.getPVector().z;
+		float x = object.getPVector().x;
+		float y = object.getPVector().y;
+		float z = object.getPVector().z;
 
-		if (sphere.getPVector().x != vtmp.x && vtmp.x >= sphere.getSize() / 2 && vtmp.x < displayWidth)
+		if (object.getPVector().x != vtmp.x && vtmp.x >= object.getSize() / 2 && vtmp.x < displayWidth)
 			x = vtmp.x;
-		if (sphere.getPVector().y != vtmp.y && vtmp.y >= 0 && vtmp.y < displayHeight)
+		if (object.getPVector().y != vtmp.y && vtmp.y >= 0 && vtmp.y < displayHeight)
 			y = vtmp.y;
 		if (vtmp.z > -200 && vtmp.z < 200)
 			z = vtmp.z;
 
 		PVector pVector = new PVector(x, y, z);
-		sphere.setVector(pVector);
-		sphere.setSpeed(speedVector);
+		object.setVector(pVector);
+		object.setSpeed(speedVector);
 	}
 
 	public void retrieveDataFromServer() {
