@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -10,6 +11,13 @@ import processing.core.PVector;
 import processing.data.JSONObject;
 import processing.serial.Serial;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import config.ConfigJugglingFromServer;
+
 public class Juggling extends PApplet {
 	int MIN_Z = 30, MAX_Z = 200;
 	int OBJECT_SIZE = 50;
@@ -17,6 +25,7 @@ public class Juggling extends PApplet {
 	Serial myport;
 
 	HashMap<String, String> configFromServer = new HashMap<String, String>();
+	ConfigJugglingFromServer config = null;
 
 	int defaultValueX, defaultValueY, defaultValueZ = 80;
 	// int x, y, z = defaultValueZ;
@@ -39,7 +48,7 @@ public class Juggling extends PApplet {
 	SampleData simpleData = new SampleData();
 	String buffer;
 
-	String url = "http://127.0.0.1:8000/scenes/current";
+	String url = "http://localhost:8000/scenes/current";
 
 	// FeuxDArtificesControleur feuControlleur;
 
@@ -96,10 +105,11 @@ public class Juggling extends PApplet {
 			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
+			config.setBackground(70);
 		}
 
 		if (objects.size() > 0)
-			background(parseInt(this.configFromServer.get("background")));
+			background(config.getBackground());
 
 		if (myport != null) {
 			// With the Arduino You need to init the port55
@@ -188,12 +198,22 @@ public class Juggling extends PApplet {
 			int blue = random.nextInt(255) + 1;
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
-			ObjectToDisplay form = new Sphere(OBJECT_SIZE, id, vector, speed, this, color);
+			ObjectToDisplay form;
+			switch (config.getForm()) {
+			case "cube":
+				form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
+				objects.add(form);
+				currentObj = form;
+				break;
+			default:
+				form = new Sphere(OBJECT_SIZE, id, vector, speed, this, color);
+				objects.add(form);
+				currentObj = form;
+				break;
+			}
 			// ObjectToDisplay form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
 			// ObjectToDisplay form = new Cylinder(OBJECT_SIZE, id, vector, speed, this,
 			// color);
-			objects.add(form);
-			currentObj = form;
 
 		}
 
@@ -284,8 +304,34 @@ public class Juggling extends PApplet {
 	}
 
 	public void retrieveDataFromServer() {
+		ObjectMapper mapper = new ObjectMapper();
+
 		JSONObject json = loadJSONObject(url);
-		this.configFromServer.put("background", "" + json.getInt("background"));
+		
+		// this.configFromServer.put("background", "" + json.get("background"));
+		// this.configFromServer.put("form", "" + json.get("form"));
+		// this.configFromServer.put("velocity", "" + json.get("velocity"));
+
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		try {
+			config = mapper.readValue(json.toString(), ConfigJugglingFromServer.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// System.out.println("background : " + config.getBackground());
+		// System.out.println("Form : " + config.getForm());
+		// System.out.println("velocity : " + config.getVelocity());
+
+		// this.configFromServer.put("background", "" + json.getInt("background"));
 		// back = json.getInt("background");
 	}
 
