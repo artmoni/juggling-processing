@@ -21,6 +21,7 @@ public class DataProtocole {
 	private void explode() {
 		// Protocole start with # to know the id of the club
 		if (stringToAnnalyse != null && stringToAnnalyse.startsWith("#")) {
+			// if (stringToAnnalyse != null) {
 			System.out.println(stringToAnnalyse);
 			stringToAnnalyse = stringToAnnalyse.substring(1);
 			values = PApplet.split(stringToAnnalyse, SEPERATOR);
@@ -32,13 +33,11 @@ public class DataProtocole {
 	}
 
 	public PVector getRessourceGyro() {
-		return new PVector(PApplet.parseFloat(values[1]), PApplet.parseFloat(values[2]),
-				PApplet.parseFloat(values[3]));
+		return new PVector(PApplet.parseFloat(values[1]), PApplet.parseFloat(values[2]), PApplet.parseFloat(values[3]));
 	}
 
 	public PVector getRessourceSpeed() {
-		return new PVector(PApplet.parseFloat(values[4]), PApplet.parseFloat(values[5]),
-				PApplet.parseFloat(values[6]));
+		return new PVector(PApplet.parseFloat(values[4]), PApplet.parseFloat(values[5]), PApplet.parseFloat(values[6]));
 	}
 
 }

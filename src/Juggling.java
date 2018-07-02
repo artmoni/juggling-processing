@@ -49,6 +49,7 @@ public class Juggling extends PApplet {
 	String buffer;
 
 	String url = "http://localhost:8000/scenes/current";
+	String arduinoPort = "/dev/ttyACM0";
 
 	// FeuxDArtificesControleur feuControlleur;
 
@@ -90,7 +91,7 @@ public class Juggling extends PApplet {
 
 	public void setup() {
 		try {
-			myport = new Serial(this, "/dev/ttyACM0", 9600);
+			myport = new Serial(this, arduinoPort, 9600);
 		} catch (Exception e) {
 			simpleData.openFile();
 		}
@@ -105,7 +106,10 @@ public class Juggling extends PApplet {
 			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
+			config = new ConfigJugglingFromServer();
 			config.setBackground(70);
+			config.setForm("sphere");
+			config.setVelocity(0);
 		}
 
 		if (objects.size() > 0)
@@ -127,7 +131,7 @@ public class Juggling extends PApplet {
 			DataProtocole protocole = new DataProtocole(buffer);
 
 			ObjectToDisplay objectToDisplay = createObjectIfNotExist(protocole.getResourceId());
-			updateObjectValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
+			updateObjectValue(objectToDisplay, protocole.getRessourceGyro());
 
 			if (objects.size() > 1) {
 				PVector eye = objects.get(0).getPVector();
@@ -205,6 +209,11 @@ public class Juggling extends PApplet {
 				objects.add(form);
 				currentObj = form;
 				break;
+			case "cylinder":
+				form = new Cylinder(OBJECT_SIZE, id, vector, speed, this, color);
+				objects.add(form);
+				currentObj = form;
+				break;
 			default:
 				form = new Sphere(OBJECT_SIZE, id, vector, speed, this, color);
 				objects.add(form);
@@ -272,7 +281,7 @@ public class Juggling extends PApplet {
 	// }
 	// }
 
-	public void updateObjectValue(ObjectToDisplay object, PVector gyroVector, PVector speedVector) {
+	public void updateObjectValue(ObjectToDisplay object, PVector gyroVector) {
 		if (object.getPVector().x <= (displayWidth - OBJECT_SIZE * 2) && object.getPVector().x > OBJECT_SIZE * 2
 				&& object.getPVector().y < (displayHeight - OBJECT_SIZE * 2)
 				&& object.getPVector().y > OBJECT_SIZE * 2) {
@@ -285,11 +294,12 @@ public class Juggling extends PApplet {
 		// (object.getPVector().y - (parseInt(round(val[2] * 20)))),
 		// (object.getPVector().z + (parseInt(round(val[3] * 100)))));
 
+		PVector lastVector = object.getPVector();
 		PVector vtmp = object.getPVector().add(gyroVector);
 
-		float x = object.getPVector().x;
-		float y = object.getPVector().y;
-		float z = object.getPVector().z;
+		float x = object.getPVector().x * 20;
+		float y = object.getPVector().y * 20;
+		float z = object.getPVector().z * 100;
 
 		if (object.getPVector().x != vtmp.x && vtmp.x >= object.getSize() / 2 && vtmp.x < displayWidth)
 			x = vtmp.x;
@@ -299,6 +309,8 @@ public class Juggling extends PApplet {
 			z = vtmp.z;
 
 		PVector pVector = new PVector(x, y, z);
+		PVector speedVector = PVector.sub(pVector, lastVector);
+		speedVector.setMag((float) 0.8);
 		object.setVector(pVector);
 		object.setSpeed(speedVector);
 	}
@@ -307,7 +319,7 @@ public class Juggling extends PApplet {
 		ObjectMapper mapper = new ObjectMapper();
 
 		JSONObject json = loadJSONObject(url);
-		
+
 		// this.configFromServer.put("background", "" + json.get("background"));
 		// this.configFromServer.put("form", "" + json.get("form"));
 		// this.configFromServer.put("velocity", "" + json.get("velocity"));

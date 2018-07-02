@@ -15,8 +15,8 @@ class Cube extends ObjectToDisplay {
 		this.pVector = pvector;
 		this.speed = speed;
 		this.color = color;
-		this.ptsW = 30;
-		this.ptsH = 30;
+		this.ptsW = 10;
+		this.ptsH = 10;
 		initializeCube(ptsW, ptsH);
 		img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
 
