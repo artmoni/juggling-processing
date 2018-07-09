@@ -133,14 +133,26 @@ public class Juggling extends PApplet {
 			DataProtocole protocole = new DataProtocole(buffer);
 
 			ObjectToDisplay objectToDisplay = createObjectIfNotExist(protocole.getResourceId());
-			updateObjectValue(objectToDisplay, protocole.getRessourceGyro());
+			updateObjectValue(objectToDisplay, protocole.getRessourceGyro(), protocole.getRessourceSpeed());
 
-			if (objects.size() > 1) {
-				PVector eye = objects.get(0).getPVector();
-				PVector whattosee = objects.get(1).getPVector();
-				// camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
-				// camera(mouseX, height / 2, (height / 2) / tan(PI / 6), mouseX, height / 2,
-				// tan(PI) * width, 0, 1, 0);
+			if (objects.size() >= 1) {
+				if (objects.size() >= config.getVue()) {
+					PVector eye;
+					PVector whattosee;
+					eye = objects.get(0).getPVector();
+					whattosee = objects.get(0).getPVector();
+					camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+					camera(whattosee.x, whattosee.y, (height / 2) / tan(PI / 6), whattosee.x, height / 2,
+							tan(PI) * width, 0, 1, 0);
+				} else {
+					PVector eye;
+					PVector whattosee;
+					eye = objects.get(config.getVue() - 1).getPVector();
+					whattosee = objects.get(config.getVue() - 1).getPVector();
+					camera(0, 0, 0, 0, 0, 0, whattosee.x, whattosee.y, whattosee.z);
+					camera(whattosee.x, whattosee.y, (height / 2) / tan(PI / 6), whattosee.x, height / 2,
+							tan(PI) * width, 0, 1, 0);
+				}
 			}
 
 			for (ObjectToDisplay myObject : objects) {

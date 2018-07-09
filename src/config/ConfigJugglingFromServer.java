@@ -5,8 +5,10 @@ public class ConfigJugglingFromServer {
 	int background;
 	int velocity;
 	String form;
+	int vue;
 
 	// PApplet parent;
+
 
 	public ConfigJugglingFromServer() {
 	}
@@ -37,5 +39,13 @@ public class ConfigJugglingFromServer {
 
 	public void setForm(String form) {
 		this.form = form;
+	}
+	
+	public int getVue() {
+		return vue;
+	}
+	
+	public void setVue(int vue) {
+		this.vue = vue;
 	}
 }
