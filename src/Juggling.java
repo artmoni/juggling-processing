@@ -24,10 +24,9 @@ public class Juggling extends PApplet {
 
 	Serial myport;
 
-	HashMap<String, String> configFromServer = new HashMap<String, String>();
 	ConfigJugglingFromServer config = null;
 
-	int defaultValueX, defaultValueY, defaultValueZ = 80;
+	int defaultValueX, defaultValueY, defaultValueZ = -100;
 	// int x, y, z = defaultValueZ;
 
 	// ArrayList firewors;
@@ -42,6 +41,8 @@ public class Juggling extends PApplet {
 	float lastxtmp = defaultValueX;
 	float lastytmp = defaultValueY;
 	float lastztmp = defaultValueZ;
+
+	PVector lastSpeed;
 
 	float defaultSpeed = 2;
 
@@ -76,8 +77,10 @@ public class Juggling extends PApplet {
 
 		objects.clear();
 
-		this.configFromServer.put("background", "70");
+		// this.configFromServer.put("background", "70");
+		config = new ConfigJugglingFromServer();
 
+		lastSpeed = new PVector();
 		// thread("retrieveDataFromServer");
 
 		// lim[0] = new PVector(-750, -1);
@@ -106,8 +109,7 @@ public class Juggling extends PApplet {
 			timer.schedule(new SynchroServerAction(), 1000);
 		} catch (Exception e) {
 			timer.cancel();
-			config = new ConfigJugglingFromServer();
-			config.setBackground(70);
+			config.setBackground(150);
 			config.setForm("sphere");
 			config.setVelocity(0);
 		}
@@ -282,7 +284,7 @@ public class Juggling extends PApplet {
 	// }
 	// }
 
-	public void updateObjectValue(ObjectToDisplay object, PVector gyroVector) {
+	public void updateObjectValue(ObjectToDisplay object, PVector gyroVector, PVector speed) {
 		if (object.getPVector().x <= (displayWidth - OBJECT_SIZE * 2) && object.getPVector().x > OBJECT_SIZE * 2
 				&& object.getPVector().y < (displayHeight - OBJECT_SIZE * 2)
 				&& object.getPVector().y > OBJECT_SIZE * 2) {
@@ -295,12 +297,11 @@ public class Juggling extends PApplet {
 		// (object.getPVector().y - (parseInt(round(val[2] * 20)))),
 		// (object.getPVector().z + (parseInt(round(val[3] * 100)))));
 
-		PVector lastVector = object.getPVector();
 		PVector vtmp = object.getPVector().add(gyroVector);
 
-		float x = object.getPVector().x * 20;
-		float y = object.getPVector().y * 20;
-		float z = object.getPVector().z * 100;
+		float x = (float) (object.getPVector().x);
+		float y = (float) (object.getPVector().y);
+		float z = (float) (object.getPVector().z);
 
 		if (object.getPVector().x != vtmp.x && vtmp.x >= object.getSize() / 2 && vtmp.x < displayWidth)
 			x = vtmp.x;
@@ -310,10 +311,11 @@ public class Juggling extends PApplet {
 			z = vtmp.z;
 
 		PVector pVector = new PVector(x, y, z);
-		PVector speedVector = PVector.sub(pVector, lastVector);
-		speedVector.setMag((float) 0.8);
+		PVector speedVector = PVector.sub(speed, lastSpeed);
+		speedVector.setMag((float) 1.5);
 		object.setVector(pVector);
 		object.setSpeed(speedVector);
+		lastSpeed = object.getVitesse();
 	}
 
 	public void retrieveDataFromServer() {
