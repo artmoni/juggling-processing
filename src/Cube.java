@@ -10,7 +10,7 @@ class Cube extends ObjectToDisplay {
 
 	Cube(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
 		super(parent);
-//		SIZE = d;
+		// SIZE = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;
@@ -68,42 +68,120 @@ class Cube extends ObjectToDisplay {
 
 	PShape textureCube(float rx, float ry, float rz, PImage t) {
 		// These are so we can map certain parts of the image on to the shape
-		PShape cube;
-		cube = parent.createShape();
-		cube.beginShape(PApplet.QUAD);
-		// cube.textureMode(PApplet.NORMAL);
-//		 cube.texture(img);
-		cube.vertex(pVector.x, pVector.y, pVector.z, 0, 1);
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z, 1, 1);
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z, 1, 0);
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z, 0, 0);
+		// PShape cube;
+		// cube = parent.createShape();
+		// cube.beginShape(PApplet.QUAD);
+		// // cube.textureMode(PApplet.NORMAL);
+		//// cube.texture(img);
+		// cube.vertex(pVector.x, pVector.y, pVector.z, 0, 1);
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z, 1, 1);
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z, 1, 0);
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z, 0, 0);
+		//
+		// cube.vertex(pVector.x, pVector.y, pVector.z);
+		// cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z);
+		//
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z);
+		//
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		// cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		//
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
+		// cube.vertex(pVector.x - 100, pVector.y, pVector.z);
+		// cube.vertex(pVector.x, pVector.y, pVector.z);
+		// cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		//
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
+		// cube.vertex(pVector.x, pVector.y - 100, pVector.z);
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
+		// cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		// cube.endShape(PApplet.CLOSE);
+		// return cube;
 
-		cube.vertex(pVector.x, pVector.y, pVector.z);
-		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z);
+		PShape box = parent.createShape(PApplet.GROUP);
+		// in setup
+		// replacement coloured cube definition
+		// z-axis front
+		PShape box_front;
+		box_front = parent.createShape();
+		box_front.beginShape();
+//		box_front.texture(t);
+		box_front.vertex(-this.SIZE, -this.SIZE, this.SIZE);
+		box_front.vertex(this.SIZE, -this.SIZE, this.SIZE);
+		box_front.vertex(this.SIZE, this.SIZE, this.SIZE);
+		box_front.vertex(-this.SIZE, this.SIZE, this.SIZE);
+		box_front.endShape(PApplet.CLOSE);
 
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z);
+		// z-axis back
+		PShape box_back;
+		box_back = parent.createShape();
+		box_back.beginShape();
+//		box_back.texture(t);
+		box_back.vertex(-this.SIZE, -this.SIZE, -this.SIZE);
+		box_back.vertex(this.SIZE, -this.SIZE, -this.SIZE);
+		box_back.vertex(this.SIZE, this.SIZE, -this.SIZE);
+		box_back.vertex(-this.SIZE, this.SIZE, -this.SIZE);
+		box_back.endShape(PApplet.CLOSE);
 
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
-		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
+		// y-axis top
+		PShape box_top;
+		box_top = parent.createShape();
+		box_top.beginShape();
+//		box_top.texture(t);
+		box_top.vertex(-this.SIZE, -this.SIZE, this.SIZE);
+		box_top.vertex(-this.SIZE, -this.SIZE, -this.SIZE);
+		box_top.vertex(this.SIZE, -this.SIZE, -this.SIZE);
+		box_top.vertex(this.SIZE, -this.SIZE, this.SIZE);
+		box_top.endShape(PApplet.CLOSE);
 
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z - 100);
-		cube.vertex(pVector.x - 100, pVector.y, pVector.z);
-		cube.vertex(pVector.x, pVector.y, pVector.z);
-		cube.vertex(pVector.x, pVector.y, pVector.z - 100);
+		// y-axis bottom
+		PShape box_bottom;
+		box_bottom = parent.createShape();
+		box_bottom.beginShape();
+//		box_bottom.texture(t);
+		box_bottom.vertex(-this.SIZE, this.SIZE, this.SIZE);
+		box_bottom.vertex(-this.SIZE, this.SIZE, -this.SIZE);
+		box_bottom.vertex(this.SIZE, this.SIZE, -this.SIZE);
+		box_bottom.vertex(this.SIZE, this.SIZE, this.SIZE);
+		box_bottom.endShape(PApplet.CLOSE);
 
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z - 100);
-		cube.vertex(pVector.x, pVector.y - 100, pVector.z);
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z);
-		cube.vertex(pVector.x - 100, pVector.y - 100, pVector.z - 100);
-		cube.endShape(PApplet.CLOSE);
-		return cube;
+		// x-axis right
+		PShape box_right;
+		box_right = parent.createShape();
+		box_right.beginShape();
+//		box_right.texture(t);
+		box_right.vertex(this.SIZE, -this.SIZE, this.SIZE);
+		box_right.vertex(this.SIZE, -this.SIZE, -this.SIZE);
+		box_right.vertex(this.SIZE, this.SIZE, -this.SIZE);
+		box_right.vertex(this.SIZE, this.SIZE, this.SIZE);
+		box_right.endShape(PApplet.CLOSE);
+
+		// x-axis left
+		PShape box_left;
+		box_left = parent.createShape();
+		box_left.beginShape();
+//		box_left.texture(t);
+		box_left.vertex(-this.SIZE, -this.SIZE, this.SIZE);
+		box_left.vertex(-this.SIZE, -this.SIZE, -this.SIZE);
+		box_left.vertex(-this.SIZE, this.SIZE, -this.SIZE);
+		box_left.vertex(-this.SIZE, this.SIZE, this.SIZE);
+		box_left.endShape(PApplet.CLOSE);
+
+		// Form faces into box
+		box.addChild(box_front);
+		box.addChild(box_back);
+		box.addChild(box_top);
+		box.addChild(box_bottom);
+		box.addChild(box_right);
+		box.addChild(box_left);
+		return box;
 	}
 
 }

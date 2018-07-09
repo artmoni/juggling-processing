@@ -203,6 +203,7 @@ public class Juggling extends PApplet {
 			int green = random.nextInt(255) + 1;
 			int color = color(red, green, blue);
 			ObjectToDisplay form;
+			System.out.println(config.getForm());
 			switch (config.getForm()) {
 			case "cube":
 				form = new Cube(OBJECT_SIZE, id, vector, speed, this, color);
