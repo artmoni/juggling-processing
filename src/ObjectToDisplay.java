@@ -47,9 +47,11 @@ public abstract class ObjectToDisplay {
 		this.pVector.add(speed);
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		// parent.sphere(size);
-		// parent.rotate(this.pVector.dist(new PVector(0, 0, 0)) * 10, this.pVector.x,
 		// this.pVector.y, this.pVector.y);
 		pShape = getShape();
+		parent.rotateX((float)(parent.random((float)(10))));
+		parent.rotateY((float)(parent.random((float)(10))));
+		parent.rotateZ((float)(parent.random((float)(10))));
 		parent.shape(pShape);
 		parent.popMatrix();
 
