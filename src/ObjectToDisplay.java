@@ -44,7 +44,7 @@ public abstract class ObjectToDisplay {
 		parent.pushMatrix();
 		parent.fill(color);
 
-		this.pVector.add(speed);
+		this.pVector.add(speed.mult(2));
 		parent.translate(this.pVector.x, this.pVector.y, this.pVector.z);
 		// parent.sphere(size);
 		// this.pVector.y, this.pVector.y);
