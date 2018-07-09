@@ -12,7 +12,7 @@ public class Cylinder extends ObjectToDisplay {
 
 	Cylinder(int d, String id, PVector pvector, PVector speed, PApplet parent, int color) {
 		super(parent);
-//		SIZE = d;
+		// SIZE = d;
 		this.id = id;
 		this.pVector = pvector;
 		this.speed = speed;
@@ -23,7 +23,7 @@ public class Cylinder extends ObjectToDisplay {
 		img = parent.loadImage(texture[new Random().nextInt(texture.length)]);
 
 	}
-	
+
 	void initializeCylinder(int numPtsW, int numPtsH_2pi) {
 
 		// The number of points around the width and height
@@ -63,48 +63,46 @@ public class Cylinder extends ObjectToDisplay {
 			}
 		}
 	}
-	
+
 	@Override
 	protected PShape getShape() {
 		// TODO Auto-generated method stub
 		PShape cylinder = parent.createShape(PApplet.GROUP);
-		float angle = 360 / 52;
-		float halfHeight = SIZE / 2;
+		float angle = 360 / 25;
+		float halfHeight = 50 / 2;
 
-		// draw top of the cylinder
+		// draw top shape
 		PShape top = parent.createShape();
 		top.beginShape();
-		for (int i = 0; i < 52; i++) {
-			float x = PApplet.cos(PApplet.radians(i * angle)) * SIZE;
-			float y = PApplet.sin(PApplet.radians(i * angle)) * SIZE;
+		for (int i = 0; i < 26; i++) {
+			float x = PApplet.cos(PApplet.radians(i * angle)) * this.SIZE;
+			float y = PApplet.sin(PApplet.radians(i * angle)) * this.SIZE;
 			top.vertex(x, y, -halfHeight);
 		}
 		top.endShape(PApplet.CLOSE);
-		cylinder.addChild(top); // adds top to heirarchy
-
-		// draw bottom of the cylinder
+		cylinder.addChild(top);
+		// draw bottom shape
 		PShape bottom = parent.createShape();
 		bottom.beginShape();
-		for (int i = 0; i < 52; i++) {
-			float x = PApplet.cos(PApplet.radians(i * angle)) * SIZE;
-			float y = PApplet.sin(PApplet.radians(i * angle)) * SIZE;
+		for (int i = 0; i < 26; i++) {
+			float x = PApplet.cos(PApplet.radians(i * angle)) * this.SIZE;
+			float y = PApplet.sin(PApplet.radians(i * angle)) * this.SIZE;
 			bottom.vertex(x, y, halfHeight);
 		}
 		bottom.endShape(PApplet.CLOSE);
-		cylinder.addChild(bottom); // adds bottom to heirarchy
+		cylinder.addChild(bottom);
 
-		// draw side of the cylinder
-		PShape side = parent.createShape();
-		side.beginShape(PApplet.QUAD_STRIP);
-		for (int i = 0; i < 52 + 1; i++) {
-			float x = PApplet.cos(PApplet.radians(i * angle)) * SIZE;
-			float y = PApplet.sin(PApplet.radians(i * angle)) * SIZE;
-			side.vertex(x, y, halfHeight);
-			side.vertex(x, y, -halfHeight);
+		PShape body = parent.createShape();
+		 // draw body
+		body.beginShape(PApplet.TRIANGLE_STRIP);
+		for (int i = 0; i < 26 + 1; i++) {
+		    float x = PApplet.cos( PApplet.radians( i * angle ) ) * this.SIZE;
+		    float y = PApplet.sin( PApplet.radians( i * angle ) ) * this.SIZE;
+		    body.vertex( x, y, halfHeight);
+		    body.vertex( x, y, -halfHeight);    
 		}
-		side.endShape(PApplet.CLOSE);
-		cylinder.addChild(side); // adds side to heirarchy
-
+		body.endShape(PApplet.CLOSE);
+		cylinder.addChild(body);
 		return cylinder;
 	}
 }
